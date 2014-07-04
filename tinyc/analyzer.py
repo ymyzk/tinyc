@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""意味解析器をまとめたモジュール"""
+
 from __future__ import print_function, unicode_literals
 import sys
 
@@ -81,6 +83,7 @@ class Analyzer(object):
 
 
 class PrintAnalyzer(Analyzer):
+    """構文木をフォーマットして出力する解析器"""
     def __init__(self):
         self._indent = 0
         self._indent_amount = 2
@@ -190,6 +193,7 @@ class PrintAnalyzer(Analyzer):
 
 
 class SymbolTable(object):
+    """シンボルを管理するためのテーブル"""
     class SymbolRedeclarationError(Exception):
         pass
 
@@ -202,10 +206,7 @@ class SymbolTable(object):
     def __init__(self, parent=None, level=0):
         self.symbols = {}
         self.parent = parent
-        # self.children = []
         self.level = level
-        # if parent is not None:
-        #     self.parent.children.append(self)
 
     def add(self, name, symbol):
         # 全てのテーブルからシンボルを探す
@@ -266,6 +267,7 @@ class SymbolTable(object):
 
 
 class SymbolAnalyzer(Analyzer):
+    """シンボルの意味解析器"""
     def a_FunctionDefinition(self, node):
         node.declarator.identifier.kind = Kinds.function
         self._add_symbol(node.declarator.identifier)

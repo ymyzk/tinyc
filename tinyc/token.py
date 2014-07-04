@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+"""構文木を作成するためのトークンのクラスをまとめたモジュール"""
+
+from __future__ import unicode_literals
 
 from tinyc.common import Kinds
 

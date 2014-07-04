@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""最適化用のクラスをまとめたモジュール"""
+
 from __future__ import print_function, unicode_literals
 
 from tinyc.code import (

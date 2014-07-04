@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""字句解析と構文解析で用いるキーワードやトークンをまとめたモジュール"""
+
+from __future__ import unicode_literals
+
 import enum
 
 
@@ -50,7 +54,7 @@ TOKENS = (
 
 
 class Kinds(enum.Enum):
-    # 初期値
+    """Identifier の種類を表す enum"""
     fresh = 0
     variable = 1
     function = 2
