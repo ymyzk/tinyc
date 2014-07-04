@@ -3,7 +3,9 @@
 
 from __future__ import print_function, unicode_literals
 
-from tinyc.code import Code, Comment, Data, Extern, Global, Label, Memory, Register, Registers, Section
+from tinyc.code import (
+    Code, Comment, Data, Extern, Global, Label, Memory, Register, Registers,
+    Section)
 
 
 class Optimizer(object):
@@ -176,10 +178,14 @@ class UnnecessaryCodeOptimizer(Optimizer):
     def _check_single_deletable(self, code):
         """コードを 1 行見て不要かどうか判定する"""
         if code.op in ('add', 'sub', 'imul',):
-            if not isinstance(code.args[1], (int,)): return False
-            elif code.op == 'add' and code.args[1] == 0: return True
-            elif code.op == 'sub' and code.args[1] == 0: return True
-            elif code.op == 'imul' and code.args[1] == 1: return True
+            if not isinstance(code.args[1], (int,)):
+                return False
+            elif code.op == 'add' and code.args[1] == 0:
+                return True
+            elif code.op == 'sub' and code.args[1] == 0:
+                return True
+            elif code.op == 'imul' and code.args[1] == 1:
+                return True
         return False
 
     def _optimize_single(self, code):
@@ -236,7 +242,8 @@ class UnnecessaryCodeOptimizer(Optimizer):
                 if isinstance(arg, Registers) and arg == register:
                     return True
         elif op in ('mov', 'movzx',):
-            if isinstance(code.args[1], Registers) and code.args[1] == register:
+            if (isinstance(code.args[1], Registers)
+                    and code.args[1] == register):
                 return True
         return False
 
@@ -358,8 +365,8 @@ class StackPointerOptimzier(Optimizer):
                             and memory.register == Registers.ebp):
                         # ebp 相対アクセスを esp 相対アクセスに書き換え
                         code[function[0] + i].args[j].register = Registers.esp
-                        code[function[0] + i].args[j].offset = function[1] + memory.offset - 4
-
+                        offset = function[1] + memory.offset - 4
+                        code[function[0] + i].args[j].offset = offset
 
         delete_lines = []
         for function in functions:

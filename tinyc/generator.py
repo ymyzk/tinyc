@@ -5,7 +5,9 @@ from __future__ import print_function, unicode_literals
 
 from tinyc import token
 from tinyc.analyzer import Analyzer
-from tinyc.code import Code, Comment, Common, Data, Extern, Global, Label, Memory, Registers, Section
+from tinyc.code import (
+    Code, Comment, Common, Data, Extern, Global, Label, Memory, Registers,
+    Section)
 from tinyc.common import Kinds
 
 
@@ -99,7 +101,8 @@ class Generator(Analyzer):
 
     def a_FunctionDefinition(self, node):
         label = Label('_' + node.declarator.identifier.name)
-        self.return_label = Label("return_{0}".format(node.declarator.identifier.name))
+        self.return_label = Label(
+            "return_{0}".format(node.declarator.identifier.name))
         self._write(Global(label))
         self._write('')
         self._write_label(label)
@@ -138,16 +141,16 @@ class Generator(Analyzer):
         node.expr.accept(self)
 
         self._write_code('inc', Registers.eax, comment='increment')
-        self._write_code('mov', var, Registers.eax,
-            comment='assign ' + node.expr.name)
+        self._write_code(
+            'mov', var, Registers.eax, comment='assign ' + node.expr.name)
 
     def a_Decrement(self, node):
         var = self._get_identifier_address(node.expr)
         node.expr.accept(self)
 
         self._write_code('dec', Registers.eax, comment='decrement')
-        self._write_code('mov', var, Registers.eax,
-            comment='assign ' + node.expr.name)
+        self._write_code(
+            'mov', var, Registers.eax, comment='assign ' + node.expr.name)
 
     def a_BinaryOperator(self, node):
         if node.op in self.op_assign:
@@ -169,8 +172,8 @@ class Generator(Analyzer):
             self._write_code('neg', Registers.eax, comment='minus')
             self._write_code('add', Registers.eax, var, comment='minus')
 
-        self._write_code('mov', var, Registers.eax,
-            comment='assign ' + node.left.name)
+        self._write_code(
+            'mov', var, Registers.eax, comment='assign ' + node.left.name)
 
     def _a_BinaryOperator_arithmetic(self, node):
         if node.right.registers == 0:
@@ -205,8 +208,9 @@ class Generator(Analyzer):
                 self._write_code('idiv', temp, comment='calc (L)')
                 self._release()
         else:
-            self._write_code(self.op_arithmetic[node.op], Registers.eax,
-                right, comment='calc (L)')
+            self._write_code(
+                self.op_arithmetic[node.op], Registers.eax, right,
+                comment='calc (L)')
 
     def _a_BinaryOperator_arithmetic_r(self, node):
         """Right 型"""
@@ -224,7 +228,8 @@ class Generator(Analyzer):
             self._write_code('cdq')
             self._write_code('idiv', left, comment='calc (R)')
         else:
-            self._write_code(self.op_arithmetic[node.op], Registers.eax, left,
+            self._write_code(
+                self.op_arithmetic[node.op], Registers.eax, left,
                 comment='calc (R)')
 
     def _a_BinaryOperator_arithmetic_rsl(self, node):
@@ -240,7 +245,8 @@ class Generator(Analyzer):
             self._write_code('cdq')
             self._write_code('idiv', temp, comment='calc (RSL)')
         else:
-            self._write_code(self.op_arithmetic[node.op], Registers.eax, temp,
+            self._write_code(
+                self.op_arithmetic[node.op], Registers.eax, temp,
                 comment='calc (RSL)')
         self._release()
 
@@ -255,8 +261,8 @@ class Generator(Analyzer):
         else:
             self._a_BinaryOperator_compare_rsl(node)
 
-        self._write_code(self.op_compare[node.op], Registers.al,
-            comment='set flag')
+        self._write_code(
+            self.op_compare[node.op], Registers.al, comment='set flag')
         self._write_code('movzx', Registers.eax, Registers.al)
 
     def _a_BinaryOperator_compare_l(self, node):
@@ -315,8 +321,7 @@ class Generator(Analyzer):
 
             self._write_code('mov', temp, 1, comment='true')
             self._write_label(label)
-            self._write_code('mov', Registers.eax, temp,
-                comment='logical and')
+            self._write_code('mov', Registers.eax, temp, comment='logical and')
         elif node.op == 'LOR':
             temp = self._allocate()
             label = self._new_label('or')
@@ -409,8 +414,10 @@ class Generator(Analyzer):
     def a_Identifier(self, node):
         offset = getattr(node, 'offset', None)
         if offset is None:
-            self._write_code('mov', Registers.eax, Data(node.label),
+            self._write_code(
+                'mov', Registers.eax, Data(node.label),
                 comment='id (global): {0}'.format(node.label.label[1:]))
         else:
-            self._write_code('mov', Registers.eax,
-                Memory(Registers.ebp, node.offset), comment='id: {0}'.format(node.name))
+            self._write_code(
+                'mov', Registers.eax, Memory(Registers.ebp, node.offset),
+                comment='id: {0}'.format(node.name))

@@ -31,13 +31,13 @@ TOKENS = (
     'DEC',      # --
 
     # Assignments
-    'EQUALS',   # =
-    'PLUS_EQ',  # +=
-    'MINUS_EQ', # -=
+    'EQUALS',    # =
+    'PLUS_EQ',   # +=
+    'MINUS_EQ',  # -=
 
     # Literals
-    'ID',       # identifiers
-    'CONSTANT', # constant (int)
+    'ID',        # identifiers
+    'CONSTANT',  # constant (int)
 
     # Delimiters
     'LPAREN',       # (

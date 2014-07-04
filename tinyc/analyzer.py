@@ -101,8 +101,7 @@ class PrintAnalyzer(Analyzer):
             if key[0] == '_':
                 continue
             val = node.__dict__[key]
-            if (isinstance(val, str) or
-                isinstance(val, int)):
+            if isinstance(val, str) or isinstance(val, int):
                 self.write('  %s: %s' % (key, str(val)))
             elif isinstance(val, Kinds):
                 self.write('  %s: %s' % (key, str(val.name)))
@@ -357,24 +356,14 @@ class SymbolAnalyzer(Analyzer):
                     line=node.lineno,
                     value=node.name))
         except SymbolTable.SymbolShadowsParameterWarning:
-            message = "Line {line}: Declaration of '{value}' shadows parameter."
-            self.warning(message.format(line=node.lineno, value=node.name))
-
-    # def _debug_table(self, table):
-    #     print("DEBUG TABLE: Level {0}".format(table.level))
-    #     for s in table.symbols:
-    #         print("Kind: {0}, Name: {1}".format(
-    #             table.symbols[s].kind.name, table.symbols[s].name))
-    #
-    #     for c in table.children:
-    #         self._debug_table(c)
+            msg = "Line {line}: Declaration of '{value}' shadows parameter."
+            self.warning(msg.format(line=node.lineno, value=node.name))
 
     def analyze(self, ast):
         self.root_table = SymbolTable(level=0)
         self.current_table = self.root_table
         ast.current_table = self.root_table
         ast.accept(self)
-        # self._debug_table(self.root_table)
 
         return ast
 
@@ -412,9 +401,9 @@ class SymbolReplaceAnalyzer(Analyzer):
 
     def _replace_symbol(self, node):
         if isinstance(node, token.Identifier):
-           symbol = getattr(node, 'symbol', None)
-           if symbol is not None:
-               return symbol
+            symbol = getattr(node, 'symbol', None)
+            if symbol is not None:
+                return symbol
         return node
 
 

@@ -24,8 +24,6 @@ class Code(object):
             elif isinstance(arg, Registers):
                 dword = False
                 break
-            elif isinstance(arg, enum.Enum): #and (arg.value in Registers):
-                print(arg.value)
             elif isinstance(arg, (str, unicode,)):
                 if arg in ('al', 'eax', 'ebp', 'esp',):
                     dword = False

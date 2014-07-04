@@ -32,7 +32,8 @@ class Compiler(object):
             code = self._optimize_one(optimizer.LabelOptimizer(), code)
             code = self._optimize_one(optimizer.GlobalExternOptimizer(), code)
             code = self._optimize_one(optimizer.JumpOptimizer(), code)
-            code = self._optimize_one(optimizer.UnnecessaryCodeOptimizer(), code)
+            code = self._optimize_one(
+                optimizer.UnnecessaryCodeOptimizer(), code)
             code = self._optimize_one(optimizer.ReplaceCodeOptimizer(), code)
             code = self._optimize_one(optimizer.StackPointerOptimzier(), code)
             if self.optimized == temp:

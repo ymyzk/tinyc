@@ -36,7 +36,7 @@ class Lexer(object):
     t_RPAREN = r'\)'
     t_LBRACE = r'\{'
     t_RBRACE = r'\}'
-    t_COMMA = r','
+    t_COMMA  = r','
     t_SEMICOLON = r';'
 
     t_ignore = ' \t'
@@ -75,10 +75,3 @@ class Lexer(object):
 
     def input(self, data):
         return self.lexer.input(data)
-
-    def test(self, data):
-        self.input(data)
-        while 1:
-            token = self.lexer.token()
-            if not token: break
-            print(token)
