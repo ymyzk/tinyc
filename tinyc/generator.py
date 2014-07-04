@@ -339,6 +339,7 @@ class Generator(Analyzer):
         done_label = self._new_label('if_done')
         node.expr.accept(self)
         if self.optimize and isinstance(node.expr, parser.Constant):
+            self.optimized += 1
             if node.expr == parser.Constant(0):
                 node.then_statement.accept(self)
             else:
