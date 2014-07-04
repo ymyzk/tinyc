@@ -71,7 +71,6 @@ class Lexer(object):
         t.lexer.skip(1)
 
     def build(self, **kwargs):
-        # kwargs['debug'] = True
         self.errors = 0
         self.lexer = lex.lex(module=self, **kwargs)
 

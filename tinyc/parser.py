@@ -394,15 +394,14 @@ class Parser(object):
                 return False
         return True
 
-    def build(self, **kwargs):
+    def build(self, debug=False, **kwargs):
         self.errors = 0
         self.optimized = 0
-        # kwargs['debug'] = True
 
         # 字句解析
         self.lexer = Lexer()
-        self.lexer.build()
-        self.parser = yacc.yacc(module=self, **kwargs)
+        self.lexer.build(debug=debug)
+        self.parser = yacc.yacc(module=self, debug=debug)
 
     def parse(self, data, optimize=True):
         self.optimize = optimize

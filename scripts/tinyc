@@ -11,14 +11,14 @@ from tinyc.compiler import Compiler
 
 
 def main(args):
-    compiler = Compiler()
-
     data = args.input.read()
     args.input.close()
 
     kwargs = {
         'ast': args.ast,
-        'O': 1
+        'debug': args.debug,
+        'O': 1,
+        'verbose': args.verbose
     }
 
     if args.O0:
@@ -26,7 +26,8 @@ def main(args):
     elif args.O1:
         kwargs['O'] = 1
 
-    result = compiler.compile(data, **kwargs)
+    compiler = Compiler(**kwargs)
+    result = compiler.compile(data)
 
     if 'asm' in result:
         # コード出力処理
@@ -60,6 +61,8 @@ if __name__ == '__main__':
                         help='Disable optimization')
     parser.add_argument('-O1', action='store_true', default=False,
                         help='Normal optimization')
+    parser.add_argument('-d', '--debug', action='store_true', default=False,
+                        help='Debug mode')
     parser.add_argument('-v', '--verbose', action='store_true', default=False,
                         help='Verbose mode')
     parser.add_argument('--ast', action='store_true', default=False,

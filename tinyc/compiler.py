@@ -11,10 +11,12 @@ from tinyc.parser import Parser
 
 
 class Compiler(object):
-    def __init__(self):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
         # 字句解析器/構文解析器
         self.parser = Parser()
-        self.parser.build()
+        self.parser.build(debug=kwargs['debug'])
 
         self.errors = 0
         self.warnings = 0
@@ -54,8 +56,8 @@ class Compiler(object):
                 result.append(str(line))
         return "\n".join(result) + '\n'
 
-    def compile(self, code, **kwargs):
-        optimize = kwargs['O'] > 0
+    def compile(self, code):
+        optimize = self.kwargs['O'] > 0
         # 字句解析/構文解析
         ast = self.parser.parse(code, optimize=optimize)
         self.errors = self.parser.errors
@@ -90,7 +92,7 @@ class Compiler(object):
         }
 
         # 抽象構文木
-        if kwargs['ast']:
+        if self.kwargs['ast']:
             result['ast'] = analyzer.PrintAnalyzer().analyze(ast)
 
         return result
