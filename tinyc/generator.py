@@ -12,6 +12,7 @@ from tinyc.common import Kinds
 
 
 class Generator(Analyzer):
+    """コード生成器"""
     def __init__(self):
         self.code = []
         self.nlabel = 0
@@ -312,11 +313,13 @@ class Generator(Analyzer):
             self._write_code('mov', temp, 0, comment='false')
 
             node.left.accept(self)
-            self._write_code('cmp', Registers.eax, temp, comment='is false?')
+            self._write_code(
+                'cmp', Registers.eax, 0, comment='and left (false?)')
             self._write_code('je', label)
 
             node.right.accept(self)
-            self._write_code('cmp', Registers.eax, temp, comment='is false?')
+            self._write_code(
+                'cmp', Registers.eax, 0, comment='and right (false?)')
             self._write_code('je', label)
 
             self._write_code('mov', temp, 1, comment='true')
@@ -328,11 +331,13 @@ class Generator(Analyzer):
             self._write_code('mov', temp, 1, comment='true')
 
             node.left.accept(self)
-            self._write_code('cmp', Registers.eax, temp, comment='is true?')
+            self._write_code(
+                'cmp', Registers.eax, 1, comment='or left (true?)')
             self._write_code('je', label)
 
             node.right.accept(self)
-            self._write_code('cmp', Registers.eax, temp, comment='is true?')
+            self._write_code(
+                'cmp', Registers.eax, 1, comment='or right (true?)')
             self._write_code('je', label)
 
             self._write_code('mov', temp, 0, comment='false')
