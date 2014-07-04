@@ -6,7 +6,7 @@ import sys
 
 import enum
 
-from tinyc import parser
+from tinyc import token
 from tinyc.common import Kinds
 
 
@@ -411,7 +411,7 @@ class SymbolReplaceAnalyzer(Analyzer):
         node.argument_list.accept(self)
 
     def _replace_symbol(self, node):
-        if isinstance(node, parser.Identifier):
+        if isinstance(node, token.Identifier):
            symbol = getattr(node, 'symbol', None)
            if symbol is not None:
                return symbol

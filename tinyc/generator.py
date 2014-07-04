@@ -3,7 +3,7 @@
 
 from __future__ import print_function, unicode_literals
 
-from tinyc import parser
+from tinyc import token
 from tinyc.analyzer import Analyzer
 from tinyc.code import Code, Comment, Common, Data, Extern, Global, Label, Memory, Registers, Section
 from tinyc.common import Kinds
@@ -84,7 +84,7 @@ class Generator(Analyzer):
         """先にグローバル変数をまとめて処理し, 次に関数定義を処理する"""
         # グローバル変数
         for external_declaration in node.nodes:
-            if isinstance(external_declaration, parser.Declaration):
+            if isinstance(external_declaration, token.Declaration):
                 for declarator in external_declaration.declarators.nodes:
                     label = Label('_' + declarator.identifier.name)
                     declarator.identifier.label = label
@@ -94,7 +94,7 @@ class Generator(Analyzer):
         self._write('')
         self._write(Section('text'))
         for external_declaration in node.nodes:
-            if isinstance(external_declaration, parser.FunctionDefinition):
+            if isinstance(external_declaration, token.FunctionDefinition):
                 external_declaration.accept(self)
 
     def a_FunctionDefinition(self, node):
@@ -188,16 +188,16 @@ class Generator(Analyzer):
         # Left
         node.left.accept(self)
         # Right
-        if isinstance(node.right, parser.Constant):
+        if isinstance(node.right, token.Constant):
             right = node.right.value
-        elif isinstance(node.right, parser.Identifier):
+        elif isinstance(node.right, token.Identifier):
             right = self._get_identifier_address(node.right)
         else:
             raise Exception()
         # Calc
         if node.op == 'DIV':
             self._write_code('cdq')
-            if isinstance(node.right, parser.Identifier):
+            if isinstance(node.right, token.Identifier):
                 self._write_code('idiv', right, comment='calc (L)')
             else:
                 temp = self._allocate()
@@ -213,9 +213,9 @@ class Generator(Analyzer):
         # Right
         node.right.accept(self)
         # Left
-        if isinstance(node.left, parser.Constant):
+        if isinstance(node.left, token.Constant):
             left = node.left.value
-        elif isinstance(node.left, parser.Identifier):
+        elif isinstance(node.left, token.Identifier):
             left = self._get_identifier_address(node.left)
         else:
             raise Exception()
@@ -264,9 +264,9 @@ class Generator(Analyzer):
         # Left
         node.left.accept(self)
         # Right
-        if isinstance(node.right, parser.Constant):
+        if isinstance(node.right, token.Constant):
             right = node.right.value
-        elif isinstance(node.right, parser.Identifier):
+        elif isinstance(node.right, token.Identifier):
             right = self._get_identifier_address(node.right)
         else:
             raise Exception()
@@ -278,9 +278,9 @@ class Generator(Analyzer):
         # Right
         node.right.accept(self)
         # Left
-        if isinstance(node.left, parser.Constant):
+        if isinstance(node.left, token.Constant):
             left = node.left.value
-        elif isinstance(node.left, parser.Identifier):
+        elif isinstance(node.left, token.Identifier):
             left = self._get_identifier_address(node.left)
         else:
             raise Exception()
@@ -338,9 +338,9 @@ class Generator(Analyzer):
         else_label = self._new_label('if_else')
         done_label = self._new_label('if_done')
         node.expr.accept(self)
-        if self.optimize and isinstance(node.expr, parser.Constant):
+        if self.optimize and isinstance(node.expr, token.Constant):
             self.optimized += 1
-            if node.expr == parser.Constant(0):
+            if node.expr == token.Constant(0):
                 node.then_statement.accept(self)
             else:
                 node.else_statement.accept(self)
@@ -381,9 +381,9 @@ class Generator(Analyzer):
     def a_ArgumentExpressionList(self, node):
         l = len(node.nodes)
         for i, argument in enumerate(reversed(node.nodes)):
-            if isinstance(argument, parser.Constant):
+            if isinstance(argument, token.Constant):
                 arg = argument.value
-            elif (isinstance(argument, parser.Identifier)
+            elif (isinstance(argument, token.Identifier)
                     and hasattr(argument, 'offset')):
                 print(argument.name)
                 arg = Memory(Registers.ebp, argument.offset)
