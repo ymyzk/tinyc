@@ -8,29 +8,69 @@ LD = clang
 # LD = gcc
 
 CFLAGS = -m32 -c -std=c11
-TCCFLAGS = --ast -O1
+TCCFLAGS = --ast -O1 --debug --verbose
 LDFLAGS = -m32 -Wl,-no_pie
 NASMFLAGS = -f macho
 
-PROGRAM = main
-OBJS = main.o arith.o fact.o fib.o gcd.o global.o
+PROGRAMS = ack arith compare fact fib gcd global label logical scope while
+OBJS = utility.o
 
 .SUFFIXES: .c .nasm .o .tc
 
-$(PROGRAM): $(OBJS)
-	$(LD) $(LDFLAGS) -o $(PROGRAM) $(OBJS)
+all: $(PROGRAMS)
+
+test: $(PROGRAMS)
+	@LIST="$(PROGRAMS)"; \
+		for x in $$LIST; do \
+			echo "$$x"; \
+			./$$x; \
+		done
+
+ack: $(OBJS) ack.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+arith: $(OBJS) arith.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+compare: $(OBJS) compare.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+fact: $(OBJS) fact.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+fib: $(OBJS) fib.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+gcd: $(OBJS) gcd.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+global: $(OBJS) global.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+label: $(OBJS) label.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+logical: $(OBJS) logical.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+scope: $(OBJS) scope.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+while: $(OBJS) while.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
 .c.o:
 	$(CC) $(CFLAGS) -o $@ $<
 
 .tc.nasm:
-	$(TCC) $(TCCFLAGS) -o $@ $<
+	$(TCC) $(TCCFLAGS) -o $@ $< 2> $(basename $@).log
 
 .nasm.o:
 	$(NASM) $(NASMFLAGS) $<
 
 clean:
 	rm -rf ./*.ast
+	rm -rf ./*.log
 	rm -rf ./*.nasm
-	rm -rf $(OBJS)
-	rm -rf $(PROGRAM)
+	rm -rf ./*.o
+	rm -rf $(PROGRAMS)

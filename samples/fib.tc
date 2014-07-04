@@ -21,3 +21,17 @@ int fib_iter(int n) {
 
     return result;
 }
+
+int main() {
+    test(fib_rec(0), 0);
+    test(fib_rec(1), 1);
+    test(fib_rec(5), 5);
+    test(fib_rec(10), 55);
+    test(fib_rec(30), 832040);
+    test(fib_iter(0), 0);
+    test(fib_iter(1), 1);
+    test(fib_iter(5), 5);
+    test(fib_iter(10), 55);
+    test(fib_iter(30), 832040);
+    return 0;
+}

@@ -7,3 +7,11 @@ int fact(int n) {
     }
     return result;
 }
+
+int main() {
+    test(fact(0), 1);
+    test(fact(1), 1);
+    test(fact(2), 2);
+    test(fact(10), 3628800);
+    return 0;
+}
