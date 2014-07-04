@@ -376,9 +376,12 @@ class Generator(Analyzer):
 
     def a_ArgumentExpressionList(self, node):
         for i, argument in enumerate(node.nodes):
-            argument.accept(self)
-            self._write_code('push', Registers.eax,
-                comment='argument {0}'.format(i))
+            if isinstance(argument, parser.Constant):
+                arg = argument.value
+            else:
+                argument.accept(self)
+                arg = Registers.eax
+            self._write_code('push', arg, comment='argument {0}'.format(i))
 
     def a_ReturnStatement(self, node):
         node.expr.accept(self)
