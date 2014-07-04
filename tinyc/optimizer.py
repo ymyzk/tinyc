@@ -4,14 +4,15 @@
 """最適化用のクラスをまとめたモジュール"""
 
 from __future__ import print_function, unicode_literals
+import logging
 
 from tinyc.code import (
-    Code, Comment, Data, Extern, Global, Label, Memory, Register, Registers,
-    Section)
+    Code, Comment, Data, Extern, Global, Label, Memory, Register, Registers)
 
 
 class Optimizer(object):
     def __init__(self):
+        self.logger = logging.getLogger()
         self.optimized = 0
 
     def optimize(self, code):
@@ -22,7 +23,7 @@ class LabelOptimizer(Optimizer):
     """不要なラベルと削除することによる最適化"""
 
     def __init__(self):
-        self.optimized = 0
+        super(LabelOptimizer, self).__init__()
         self.replace_table = {}
 
     def _optimize_duplication(self, code):
@@ -159,6 +160,7 @@ class JumpOptimizer(Optimizer):
                     # 無条件ジャンプ命令直後のラベルであれば, ジャンプ命令を削除対象に追加
                     self.optimized += 1
                     delete_lines += [jump_line]
+                    self.logger.debug('Remove: instruction after jmp')
                 jump = None
             elif isinstance(line, Code):
                 if line.op == 'jmp':
@@ -183,10 +185,13 @@ class UnnecessaryCodeOptimizer(Optimizer):
             if not isinstance(code.args[1], (int,)):
                 return False
             elif code.op == 'add' and code.args[1] == 0:
+                self.logger.debug('Remove: add R, 0')
                 return True
             elif code.op == 'sub' and code.args[1] == 0:
+                self.logger.debug('Remove: sub R, 0')
                 return True
             elif code.op == 'imul' and code.args[1] == 1:
+                self.logger.debug('Remove: imul R, 1')
                 return True
         return False
 
@@ -228,6 +233,8 @@ class UnnecessaryCodeOptimizer(Optimizer):
                         self.optimized += 1
                         delete_lines += [store_line, i]
                         store = None
+                        self.logger.debug(
+                            'Remove: mov (load) after mov (store)')
                     else:
                         store = None
             else:
@@ -273,8 +280,10 @@ class UnnecessaryCodeOptimizer(Optimizer):
                     start = -1
                 elif self._is_register_write(line):
                     if start > 0:
+                        self.optimized += 1
                         delete_lines.append(start)
                         start = -1
+                        self.logger.debug('Remove: unused (mov)')
                     start = i
 
         return [i for j, i in enumerate(code) if j not in delete_lines]
@@ -300,6 +309,7 @@ class ReplaceCodeOptimizer(Optimizer):
                     code[i].args[1] = code[i].args[0]
                     code[i].comment += ' (Optimized mov -> xor)'
                     self.optimized += 1
+                    self.logger.debug('Replace : mov R, 0 -> xor R, R')
                 elif (line.op == 'imul'
                         and isinstance(line.args[1], (int, str,))
                         and int(line.args[1]) == 0):
@@ -308,18 +318,21 @@ class ReplaceCodeOptimizer(Optimizer):
                     code[i].args[1] = 0
                     code[i].comment += ' (Optimized imul -> mov)'
                     self.optimized += 1
+                    self.logger.debug('Replace : imul R, 0 -> mov R, 0')
                 elif line.op == 'inc':
                     # inc -> add
                     code[i].op = 'add'
                     code[i].args.append(1)
                     code[i].comment += ' (Optimized inc -> add)'
                     self.optimized += 1
+                    self.logger.debug('Replace : inc R -> add R, 1')
                 elif line.op == 'dec':
                     # dec -> sub
                     code[i].op = 'sub'
                     code[i].args.append(1)
                     code[i].comment += ' (Optimized dec -> sub)'
                     self.optimized += 1
+                    self.logger.debug('Replace : dec R -> sub R, 1')
         return code
 
 
