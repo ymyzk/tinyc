@@ -1,0 +1,39 @@
+int arith_l_var_var(int op, int a, int b) {
+    if (op == 0) return a + b;
+    else if (op == 1) return a - b;
+    else if (op == 2) return a * b;
+    else if (op == 3) return a / b;
+    else return -1;
+}
+
+int arith_l_var_cons(int op, int a) {
+    if (op == 0) return a + 3;
+    else if (op == 1) return a - 3;
+    else if (op == 2) return a * 3;
+    else if (op == 3) return a / 3;
+    else return -1;
+}
+
+int arith_l_cons_var(int op, int a) {
+    if (op == 0) return 6 + a;
+    else if (op == 1) return 6 - a;
+    else if (op == 2) return 6 * a;
+    else if (op == 3) return 6 / a;
+    else return -1;
+}
+
+int arith_l_cons_cons(int op) {
+    if (op == 0) return 6 + 3;
+    else if (op == 1) return 6 - 3;
+    else if (op == 2) return 6 * 3;
+    else if (op == 3) return 6 / 3;
+    else return -1;
+}
+
+int arith_r(int op, int a, int b, int c) {
+    if (op == 0) return a + (b - c);
+    else if (op == 1) return a + (b / c);
+    else if (op == 2) return a * (b - c);
+    else if (op == 3) return a * (b / c);
+    else return -1;
+}

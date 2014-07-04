@@ -1,0 +1,9 @@
+int fact(int n) {
+    int i, result;
+    i = 0;
+    result = 1;
+    while (++i <= n) {
+        result = result * i;
+    }
+    return result;
+}

@@ -1,0 +1,6 @@
+int global_x;
+
+int test_global_x() {
+    global_x += global_x;
+    return global_x;
+}
