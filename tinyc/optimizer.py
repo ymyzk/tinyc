@@ -283,6 +283,7 @@ class ReplaceCodeOptimizer(Optimizer):
         for i, line in enumerate(code[:]):
             if isinstance(line, Code):
                 if (line.op == 'mov'
+                        and isinstance(line.args[0], Registers)
                         and isinstance(line.args[1], (int, str,))
                         and int(line.args[1]) == 0):
                     # mov を xor に置換する
