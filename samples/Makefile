@@ -15,10 +15,12 @@ NASMFLAGS = -f macho
 PROGRAMS = ack arith compare fact fib gcd global label logical scope while
 OBJS = utility.o
 
+.PRECIOUS: %.nasm
 .SUFFIXES: .c .nasm .o .tc
 
 all: $(PROGRAMS)
 
+.PHONY: test
 test: $(PROGRAMS)
 	@LIST="$(PROGRAMS)"; \
 		for x in $$LIST; do \
@@ -68,6 +70,7 @@ while: $(OBJS) while.o
 .nasm.o:
 	$(NASM) $(NASMFLAGS) $<
 
+.PHONY: clean
 clean:
 	rm -rf ./*.ast
 	rm -rf ./*.log
