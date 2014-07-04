@@ -418,7 +418,6 @@ class FunctionAnalyzer(Analyzer):
         node.compound_statement.accept(self)
 
     def a_FunctionExpression(self, node):
-        # TODO: undefined_function の場合の処理を要チェック
         if node.function.kind == Kinds.function:
             if node.function.parameters != len(node.argument_list.nodes):
                 message = "Line {line}: '{value}' requires {num} parameters."
