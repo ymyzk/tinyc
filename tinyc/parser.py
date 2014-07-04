@@ -370,10 +370,10 @@ class Parser(object):
         """logical_OR_expr : logical_OR_expr LOR logical_AND_expr"""
         if self.optimize and self._check_if_constants(p[1], p[3]):
             self.optimized += 1
-            if p[1] == Constant(0) or p[3] == Constant(0):
-                p[0] = Constant(0)
-            else:
+            if p[1] == Constant(1) or p[3] == Constant(1):
                 p[0] = Constant(1)
+            else:
+                p[0] = Constant(0)
         else:
             p[0] = BinaryOperator('LOR', p[1], p[3])
 
@@ -385,10 +385,10 @@ class Parser(object):
         """logical_AND_expr : logical_AND_expr LAND equality_expr"""
         if self.optimize and self._check_if_constants(p[1], p[3]):
             self.optimized += 1
-            if p[1] == Constant(0) and p[3] == Constant(0):
-                p[0] = Constant(0)
-            else:
+            if p[1] == Constant(1) and p[3] == Constant(1):
                 p[0] = Constant(1)
+            else:
+                p[0] = Constant(0)
         else:
             p[0] = BinaryOperator('LAND', p[1], p[3])
 
@@ -401,9 +401,9 @@ class Parser(object):
         if self.optimize and self._check_if_constants(p[1], p[3]):
             self.optimized += 1
             if p[1] == p[3]:
-                p[0] = Constant(0)
-            else:
                 p[0] = Constant(1)
+            else:
+                p[0] = Constant(0)
         else:
             p[0] = BinaryOperator('EQ', p[1], p[3])
 
@@ -412,9 +412,9 @@ class Parser(object):
         if self.optimize and self._check_if_constants(p[1], p[3]):
             self.optimized += 1
             if p[1] != p[3]:
-                p[0] = Constant(0)
-            else:
                 p[0] = Constant(1)
+            else:
+                p[0] = Constant(0)
         else:
             p[0] = BinaryOperator('NEQ', p[1], p[3])
 
@@ -427,9 +427,9 @@ class Parser(object):
         if self.optimize and self._check_if_constants(p[1], p[3]):
             self.optimized += 1
             if p[1] < p[3]:
-                p[0] = Constant(0)
-            else:
                 p[0] = Constant(1)
+            else:
+                p[0] = Constant(0)
         else:
             p[0] = BinaryOperator('LT', p[1], p[3])
 
@@ -438,9 +438,9 @@ class Parser(object):
         if self.optimize and self._check_if_constants(p[1], p[3]):
             self.optimized += 1
             if p[1] <= p[3]:
-                p[0] = Constant(0)
-            else:
                 p[0] = Constant(1)
+            else:
+                p[0] = Constant(0)
         else:
             p[0] = BinaryOperator('LTE', p[1], p[3])
 
@@ -449,9 +449,9 @@ class Parser(object):
         if self.optimize and self._check_if_constants(p[1], p[3]):
             self.optimized += 1
             if p[1] > p[3]:
-                p[0] = Constant(0)
-            else:
                 p[0] = Constant(1)
+            else:
+                p[0] = Constant(0)
         else:
             p[0] = BinaryOperator('GT', p[1], p[3])
 
@@ -460,9 +460,9 @@ class Parser(object):
         if self.optimize and self._check_if_constants(p[1], p[3]):
             self.optimized += 1
             if p[1] >= p[3]:
-                p[0] = Constant(0)
-            else:
                 p[0] = Constant(1)
+            else:
+                p[0] = Constant(0)
         else:
             p[0] = BinaryOperator('GTE', p[1], p[3])
 

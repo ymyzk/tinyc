@@ -373,15 +373,19 @@ class Generator(Analyzer):
             self._write(Extern(label))
         node.argument_list.accept(self)
         self._write_code('call', label)
+        self._write_code(
+            'add', Registers.esp, 4 * len(node.argument_list.nodes),
+            comment='Release argument stack')
 
     def a_ArgumentExpressionList(self, node):
-        for i, argument in enumerate(node.nodes):
+        l = len(node.nodes)
+        for i, argument in enumerate(reversed(node.nodes)):
             if isinstance(argument, parser.Constant):
                 arg = argument.value
             else:
                 argument.accept(self)
                 arg = Registers.eax
-            self._write_code('push', arg, comment='argument {0}'.format(i))
+            self._write_code('push', arg, comment='argument {0}'.format(l - i))
 
     def a_ReturnStatement(self, node):
         node.expr.accept(self)

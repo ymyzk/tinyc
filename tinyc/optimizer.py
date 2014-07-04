@@ -242,7 +242,7 @@ class UnnecessaryCodeOptimizer(Optimizer):
 
     def _is_register_write(self, code, register=Registers.eax):
         op = code.op.replace(' dword', '')
-        if op in ('idiv', 'call',):
+        if op in ('idiv',):
             return True
         elif op in ('mov', 'movzx', 'add', 'sub', 'imul', 'xor',):
             if (isinstance(code.args[0], Registers)
