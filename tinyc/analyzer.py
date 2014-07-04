@@ -4,9 +4,7 @@
 """意味解析器をまとめたモジュール"""
 
 from __future__ import print_function, unicode_literals
-import sys
-
-import enum
+import logging
 
 from tinyc import token
 from tinyc.common import Kinds
@@ -17,6 +15,7 @@ class Analyzer(object):
     def __init__(self):
         self.warnings = 0
         self.errors = 0
+        self.logger = logging.getLogger()
 
     def _analyze_list(self, l):
         map(lambda i: i.accept(self), l)
@@ -27,13 +26,11 @@ class Analyzer(object):
 
     def warning(self, message):
         self.warnings += 1
-        message = "Warning: {0}".format(message)
-        print(message, file=sys.stderr)
+        logging.warning("Warning: {0}".format(message))
 
     def error(self, message):
         self.errors += 1
-        message = "Error: {0}".format(message)
-        print(message, file=sys.stderr)
+        logging.error("Error: {0}".format(message))
 
     def a_Node(self, node):
         pass
@@ -85,6 +82,8 @@ class Analyzer(object):
 class PrintAnalyzer(Analyzer):
     """構文木をフォーマットして出力する解析器"""
     def __init__(self):
+        super(PrintAnalyzer, self).__init__()
+
         self._indent = 0
         self._indent_amount = 2
 
@@ -187,7 +186,6 @@ class PrintAnalyzer(Analyzer):
         self.write_node(node)
 
     def analyze(self, ast):
-        self.text = ''
         ast.accept(self)
         return self.text
 

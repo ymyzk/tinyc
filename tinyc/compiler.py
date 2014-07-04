@@ -3,12 +3,10 @@
 
 from __future__ import print_function, unicode_literals
 import logging
-import sys
 
 from tinyc import analyzer, optimizer
-from tinyc.code import Code, Comment, Label
+from tinyc.code import Label
 from tinyc.generator import Generator
-from tinyc.lexer import Lexer
 from tinyc.parser import Parser
 
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function, unicode_literals
-import sys
+import logging
 
 from ply import lex
 
@@ -63,13 +63,13 @@ class Lexer(object):
 
     def t_error(self, t):
         self.errors += 1
-        print(
+        self.logger.error(
             "Line {line}: Illegal character '{value}'.".format(
                 line=t.lineno,
-                value=t.value[0]),
-            file=sys.stderr)
+                value=t.value[0]))
         t.lexer.skip(1)
 
     def build(self, **kwargs):
         self.errors = 0
+        self.logger = logging.getLogger()
         self.lexer = lex.lex(module=self, **kwargs)

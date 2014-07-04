@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-import sys
+import logging
 
 from ply import yacc
 
@@ -369,11 +369,7 @@ class Parser(object):
     def p_error(self, p):
         self.errors += 1
         message = "Line {line}: Syntax error at '{value}'. "
-        print(
-            message.format(
-                line=p.lineno,
-                value=p.value),
-            file=sys.stderr)
+        logging.error(message.format(line=p.lineno, value=p.value))
 
         # Panic mode に突入, 特定のトークンまで読み飛ばす
         while True:
@@ -397,6 +393,7 @@ class Parser(object):
     def build(self, debug=False, **kwargs):
         self.errors = 0
         self.optimized = 0
+        self.logger = logging.getLogger()
 
         # 字句解析
         self.lexer = Lexer()
