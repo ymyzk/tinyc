@@ -1,0 +1,71 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function, unicode_literals
+import argparse
+import os
+import pprint
+import sys
+
+from tinyc.compiler import Compiler
+
+
+def main(args):
+    compiler = Compiler()
+
+    data = args.input.read()
+    args.input.close()
+
+    kwargs = {
+        'ast': args.ast,
+        'O': 1
+    }
+
+    if args.O0:
+        kwargs['O'] = 0
+    elif args.O1:
+        kwargs['O'] = 1
+
+    result = compiler.compile(data, **kwargs)
+
+    if 'asm' in result:
+        # コード出力処理
+        if args.o is None:
+            out_filename = os.path.splitext(args.input.name)[0] + '.nasm'
+            args.o = open(out_filename, 'w')
+
+        args.o.write(result['asm'])
+        args.o.close()
+
+        if result['warnings'] > 0:
+            print("Warnings: {0}".format(result['warnings']),
+                file=sys.stderr)
+        if args.verbose and result['optimized'] > 0:
+            print("Optimized: {0}".format(result['optimized']),
+                file=sys.stderr)
+    else:
+        print("Error: {0}, Warnings: {1}".format(
+            result['errors'], result['warnings']), file=sys.stderr)
+
+    # 抽象構文木出力処理
+    if args.ast:
+        ast_filename = os.path.splitext(args.input.name)[0] + '.ast'
+        with open(ast_filename, 'w') as ast_file:
+            ast_file.write(result['ast'])
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='TinyC compiler')
+    parser.add_argument('-O0', action='store_true', default=False,
+                        help='Disable optimization')
+    parser.add_argument('-O1', action='store_true', default=False,
+                        help='Normal optimization')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False,
+                        help='Verbose mode')
+    parser.add_argument('--ast', action='store_true', default=False,
+                        help='Export AST file for debugging')
+    parser.add_argument('-o', type=argparse.FileType('w'), metavar='file',
+                        default=None, help='Write outout to <file>')
+    parser.add_argument('input', type=argparse.FileType('r'), default=sys.stdin)
+    args = parser.parse_args()
+    main(args)

@@ -52,3 +52,10 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+venv
+parser.out
+parsetab.py
+*.ast
+*.nasm
+*.o
+*.swp
