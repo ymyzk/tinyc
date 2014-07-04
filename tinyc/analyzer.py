@@ -86,6 +86,7 @@ class PrintAnalyzer(Analyzer):
 
         self._indent = 0
         self._indent_amount = 2
+        self.text = ''
 
     def indent(self):
         self._indent += 1
