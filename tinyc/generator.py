@@ -383,6 +383,10 @@ class Generator(Analyzer):
         for i, argument in enumerate(reversed(node.nodes)):
             if isinstance(argument, parser.Constant):
                 arg = argument.value
+            elif (isinstance(argument, parser.Identifier)
+                    and hasattr(argument, 'offset')):
+                print(argument.name)
+                arg = Memory(Registers.ebp, argument.offset)
             else:
                 argument.accept(self)
                 arg = Registers.eax
@@ -406,7 +410,7 @@ class Generator(Analyzer):
         offset = getattr(node, 'offset', None)
         if offset is None:
             self._write_code('mov', Registers.eax, Data(node.label),
-                comment='id: {0}'.format(node.label))
+                comment='id (global): {0}'.format(node.label.label[1:]))
         else:
             self._write_code('mov', Registers.eax,
                 Memory(Registers.ebp, node.offset), comment='id: {0}'.format(node.name))

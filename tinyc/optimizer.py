@@ -326,7 +326,9 @@ class StackPointerOptimzier(Optimizer):
             # 関数の開始地点を見つける
             if not isinstance(line, Code):
                 continue
-            elif line.op == 'push' and line.args[0] == Registers.ebp:
+            elif (line.op == 'push'
+                    and isinstance(line.args[0], Registers)
+                    and line.args[0] == Registers.ebp):
                 flag = True
                 start = i
             elif start == i - 1:
