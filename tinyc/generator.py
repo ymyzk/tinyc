@@ -390,7 +390,6 @@ class Generator(Analyzer):
                 arg = argument.value
             elif (isinstance(argument, token.Identifier)
                     and hasattr(argument, 'offset')):
-                print(argument.name)
                 arg = Memory(Registers.ebp, argument.offset)
             else:
                 argument.accept(self)
