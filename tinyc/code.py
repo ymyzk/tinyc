@@ -80,10 +80,14 @@ class Extern(object):
         self.label = label
 
     def __eq__(self, other):
-        return self.label == other.label
+        if isinstance(other, Extern):
+            return self.label == other.label
+        return NotImplemented
 
     def __ne__(self, other):
-        return self.label != other.label
+        if isinstance(other, Extern):
+            return self.label != other.label
+        return NotImplemented
 
     def __str__(self):
         return "    EXTERN      " + str(self.label)
@@ -94,10 +98,14 @@ class Global(object):
         self.label = label
 
     def __eq__(self, other):
-        return self.label == other.label
+        if isinstance(other, Global):
+            return self.label == other.label
+        return NotImplemented
 
     def __ne__(self, other):
-        return self.label != other.label
+        if isinstance(other, Global):
+            return self.label != other.label
+        return NotImplemented
 
     def __str__(self):
         return "    GLOBAL      " + str(self.label)
@@ -108,10 +116,14 @@ class Label(object):
         self.label = label
 
     def __eq__(self, other):
-        return self.label == other.label
+        if isinstance(other, Label):
+            return self.label == other.label
+        return NotImplemented
 
     def __ne__(self, other):
-        return self.label != other.label
+        if isinstance(other, Label):
+            return self.label != other.label
+        return NotImplemented
 
     def __str__(self):
         return self.label
@@ -123,8 +135,16 @@ class Memory(object):
         self.offset = offset
 
     def __eq__(self, other):
-        return (self.register == other.register
-                and self.offset == other.offset)
+        if isinstance(other, Memory):
+            return (self.register == other.register
+                    and self.offset == other.offset)
+        return NotImplemented
+
+    def __ne__(self, other):
+        if isinstance(other, Memory):
+            return (self.register != other.register
+                    or self.offset != other.offset)
+        return NotImplemented
 
     def __str__(self):
         return '[{0}{1:+d}]'.format(self.register.value, self.offset)
@@ -135,7 +155,14 @@ class Register(object):
         self.register = register
 
     def __eq__(self, other):
-        return self.register == other.register
+        if isinstance(other, Register):
+            return self.register == other.register
+        return NotImplemented
+
+    def __ne__(self, other):
+        if isinstance(other, Register):
+            return self.register != other.register
+        return NotImplemented
 
     def __str__(self):
         return self.register

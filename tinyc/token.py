@@ -53,18 +53,26 @@ class Constant(Node):
         return str(self.value)
 
     def __repr__(self):
-        return self.value
+        return '<Constant: {0}>'.format(int(self.value))
 
     def __add__(self, other):
-        return Constant(self.value + other.value)
+        if isinstance(other, Constant):
+            return Constant(self.value + other.value)
+        return NotImplemented
 
     def __sub__(self, other):
-        return Constant(self.value - other.value)
+        if isinstance(other, Constant):
+            return Constant(self.value - other.value)
+        return NotImplemented
 
     def __mul__(self, other):
-        return Constant(self.value * other.value)
+        if isinstance(other, Constant):
+            return Constant(self.value * other.value)
+        return NotImplemented
 
     def __div__(self, other):
+        if not isinstance(other, Constant):
+            return NotImplemented
         if self.value > 0 and other.value > 0:
             return Constant(self.value // other.value)
         elif self.value > 0 and other.value > 0:
@@ -81,22 +89,34 @@ class Constant(Node):
         return Constant(-self.value)
 
     def __eq__(self, other):
-        return self.value == other.value
+        if isinstance(other, Constant):
+            return self.value == other.value
+        return NotImplemented
 
     def __ne__(self, other):
-        return self.value != other.value
+        if isinstance(other, Constant):
+            return self.value != other.value
+        return NotImplemented
 
     def __lt__(self, other):
-        return self.value < other.value
+        if isinstance(other, Constant):
+            return self.value < other.value
+        return NotImplemented
 
     def __le__(self, other):
-        return self.value <= other.value
+        if isinstance(other, Constant):
+            return self.value <= other.value
+        return NotImplemented
 
     def __gt__(self, other):
-        return self.value > other.value
+        if isinstance(other, Constant):
+            return self.value > other.value
+        return NotImplemented
 
     def __ge__(self, other):
-        return self.value >= other.value
+        if isinstance(other, Constant):
+            return self.value >= other.value
+        return NotImplemented
 
 
 class Declaration(Node):
