@@ -38,6 +38,19 @@ Tiny C Compiler written in Python 2
  * dec *R* -> sub *R* 1 (参考文献5の3.5.1.1)
 * ebp 相対アクセスを esp 相対アクセスに書き換え
 
+実行方法
+--------
+```
+$ pip install git+https://github.com/litesystems/tinyc.git
+$ tinyc -h
+```
+
+テスト環境
+----------
+* OS X
+* NASM 2.11.05
+* clang 3.4
+
 参考文献
 --------
 1. [計算機科学実験及演習 3（ソフトウェア）実験資料](http://www.fos.kuis.kyoto-u.ac.jp/~umatani/le3b/siryo.pdf)
