@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function, unicode_literals
+import logging
+import sys
 
 from tinyc import analyzer, optimizer
 from tinyc.code import Code, Comment, Label
@@ -13,6 +15,7 @@ from tinyc.parser import Parser
 class Compiler(object):
     def __init__(self, **kwargs):
         self.kwargs = kwargs
+        self.logger = logging.getLogger()
 
         # 字句解析器/構文解析器
         self.parser = Parser()
@@ -29,7 +32,10 @@ class Compiler(object):
         return ast
 
     def _optimize(self, code):
-        for i in range(5):
+        """最適化処理"""
+        self.logger.info('Compilation process (Peephole optimizations)')
+        for i in range(1, 6):
+            self.logger.info('Peephole optimizations (Phase {0})'.format(i))
             temp = self.optimized
             code = self._optimize_one(optimizer.LabelOptimizer(), code)
             code = self._optimize_one(optimizer.GlobalExternOptimizer(), code)
@@ -40,6 +46,7 @@ class Compiler(object):
             code = self._optimize_one(optimizer.StackPointerOptimzier(), code)
             if self.optimized == temp:
                 break
+            self.logger.info('Optimized: {0}'.format(self.optimized - temp))
         return code
 
     def _optimize_one(self, optimizer, code):
@@ -47,7 +54,9 @@ class Compiler(object):
         self.optimized += optimizer.optimized
         return code
 
-    def _generate(self, code):
+    def _format(self, code):
+        """コードを文字列にフォーマットする処理"""
+        self.logger.info('Compilation process (Code formatting)')
         result = []
         for line in code:
             if isinstance(line, Label):
@@ -58,13 +67,17 @@ class Compiler(object):
 
     def compile(self, code):
         optimize = self.kwargs['O'] > 0
+        result = {}
+
         # 字句解析/構文解析
+        self.logger.info('Compilation process (Lexical/Syntax analysis)')
         ast = self.parser.parse(code, optimize=optimize)
         self.errors = self.parser.errors
         self.optimized += self.parser.optimized
 
         if self.errors == 0:
             # 意味解析
+            self.logger.info('Compilation process (Semantic analysis)')
             ast = self._analyze(analyzer.SymbolAnalyzer(), ast)
             ast = self._analyze(analyzer.SymbolReplaceAnalyzer(), ast)
             ast = self._analyze(analyzer.FunctionAnalyzer(), ast)
@@ -73,6 +86,7 @@ class Compiler(object):
 
         if self.errors == 0:
             # コード生成
+            self.logger.info('Compilation process (Code generation)')
             generator = Generator()
             ast = generator.analyze(ast, optimize=optimize)
             code = generator.code
@@ -81,18 +95,16 @@ class Compiler(object):
             # 最適化
             if optimize:
                 code = self._optimize(code)
-                result['optimized'] = self.optimized
 
-            result['asm'] = self._generate(code)
-
-        result = {
-            'errors': self.errors,
-            'warnings': self.warnings,
-            'optimized': self.optimized
-        }
+            result['asm'] = self._format(code)
 
         # 抽象構文木
         if self.kwargs['ast']:
+            self.logger.info('Compilation process (AST formatting)')
             result['ast'] = analyzer.PrintAnalyzer().analyze(ast)
+
+        result['errors'] = self.errors
+        result['warnings'] = self.warnings
+        result['optimized'] = self.optimized
 
         return result

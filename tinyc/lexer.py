@@ -73,6 +73,3 @@ class Lexer(object):
     def build(self, **kwargs):
         self.errors = 0
         self.lexer = lex.lex(module=self, **kwargs)
-
-    def input(self, data):
-        return self.lexer.input(data)

@@ -3,14 +3,37 @@
 
 from __future__ import print_function, unicode_literals
 import argparse
+import logging
 import os
-import pprint
 import sys
 
 from tinyc.compiler import Compiler
+from tinyc.logger import get_logger
+
+
+def get_logger(args):
+    level = logging.WARNING
+    if args.debug:
+        level = logging.DEBUG
+    elif args.verbose:
+        level = logging.INFO
+
+    logger = logging.getLogger()
+    logger.setLevel(level)
+
+    handler = logging.StreamHandler()
+    handler.setLevel(level)
+
+    formatter = logging.Formatter('%(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    return logger
 
 
 def main(args):
+    logger = get_logger(args)
+
     data = args.input.read()
     args.input.close()
 
@@ -38,15 +61,12 @@ def main(args):
         args.o.write(result['asm'])
         args.o.close()
 
-        if result['warnings'] > 0:
-            print("Warnings: {0}".format(result['warnings']),
-                file=sys.stderr)
-        if args.verbose and result['optimized'] > 0:
-            print("Optimized: {0}".format(result['optimized']),
-                file=sys.stderr)
-    else:
-        print("Error: {0}, Warnings: {1}".format(
-            result['errors'], result['warnings']), file=sys.stderr)
+    if result['errors'] > 0:
+        logging.error('Error: {0}'.format(result['errors']))
+    if result['warnings'] > 0:
+        logger.warning('Warning: {0}'.format(result['warnings']))
+    if result['optimized'] > 0:
+        logger.info('Optimized: {0}'.format(result['optimized']))
 
     # 抽象構文木出力処理
     if args.ast:
