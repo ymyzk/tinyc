@@ -62,6 +62,7 @@ class Lexer(object):
         t.lexer.lineno += t.value.count('\n')
 
     def t_error(self, t):
+        self.errors += 1
         print(
             "Line {line}: Illegal character '{value}'.".format(
                 line=t.lineno,
@@ -71,6 +72,7 @@ class Lexer(object):
 
     def build(self, **kwargs):
         # kwargs['debug'] = True
+        self.errors = 0
         self.lexer = lex.lex(module=self, **kwargs)
 
     def input(self, data):

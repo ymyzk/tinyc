@@ -367,12 +367,21 @@ class Parser(object):
         p[0] = token.NullNode()
 
     def p_error(self, p):
+        self.errors += 1
         message = "Line {line}: Syntax error at '{value}'. "
         print(
             message.format(
                 line=p.lineno,
                 value=p.value),
             file=sys.stderr)
+
+        # Panic mode に突入, 特定のトークンまで読み飛ばす
+        while True:
+            token = yacc.token()
+            if not token or token.type in ('SEMICOLON', 'RBRACE',):
+                break
+        # 構文解析を再開
+        self.parser.restart()
 
     # else は右結合的に処理する
     precedence = (
@@ -386,13 +395,17 @@ class Parser(object):
         return True
 
     def build(self, **kwargs):
+        self.errors = 0
         self.optimized = 0
+        # kwargs['debug'] = True
+
+        # 字句解析
         self.lexer = Lexer()
         self.lexer.build()
-        # kwargs['debug'] = True
-        self.stack = []
         self.parser = yacc.yacc(module=self, **kwargs)
 
     def parse(self, data, optimize=True):
         self.optimize = optimize
-        return self.parser.parse(data)
+        result = self.parser.parse(data)
+        self.errors += self.lexer.errors
+        return result

@@ -58,20 +58,16 @@ class Compiler(object):
         optimize = kwargs['O'] > 0
         # 字句解析/構文解析
         ast = self.parser.parse(code, optimize=optimize)
+        self.errors = self.parser.errors
         self.optimized += self.parser.optimized
 
-        # 意味解析
-        ast = self._analyze(analyzer.SymbolAnalyzer(), ast)
-        ast = self._analyze(analyzer.SymbolReplaceAnalyzer(), ast)
-        ast = self._analyze(analyzer.FunctionAnalyzer(), ast)
-        ast = self._analyze(analyzer.ParameterAnalyzer(), ast)
-        ast = self._analyze(analyzer.RegisterAnalyzer(), ast)
-
-        result = {
-            'errors': self.errors,
-            'warnings': self.warnings,
-            'optimized': self.optimized
-        }
+        if self.errors == 0:
+            # 意味解析
+            ast = self._analyze(analyzer.SymbolAnalyzer(), ast)
+            ast = self._analyze(analyzer.SymbolReplaceAnalyzer(), ast)
+            ast = self._analyze(analyzer.FunctionAnalyzer(), ast)
+            ast = self._analyze(analyzer.ParameterAnalyzer(), ast)
+            ast = self._analyze(analyzer.RegisterAnalyzer(), ast)
 
         if self.errors == 0:
             # コード生成
@@ -86,6 +82,12 @@ class Compiler(object):
                 result['optimized'] = self.optimized
 
             result['asm'] = self._generate(code)
+
+        result = {
+            'errors': self.errors,
+            'warnings': self.warnings,
+            'optimized': self.optimized
+        }
 
         # 抽象構文木
         if kwargs['ast']:
