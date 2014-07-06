@@ -4,14 +4,19 @@ NASM = nasm
 CC = clang
 LD = clang
 # GCC
-CC = gcc
-LD = gcc
+#CC = gcc
+#LD = gcc
 
 # OS X
 CFLAGS = -m32 -c -std=c99
 TCCFLAGS = --ast -O1 -f macho --debug --verbose
 LDFLAGS = -m32 -Wl,-no_pie
 NASMFLAGS = -f macho
+# Linux
+#CFLAGS = -m32 -c -std=c99
+#TCCFLAGS = --ast -O1 -f elf --debug --verbose
+#LDFLAGS = -m32
+#NASMFLAGS = -f elf
 
 PROGRAMS = ack arith compare fact fib gcd global label logical scope while
 OBJS = utility.o
