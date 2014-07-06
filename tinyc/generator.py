@@ -367,12 +367,13 @@ class Generator(Analyzer):
             else:
                 node.else_statement.accept(self)
         else:
-            self._write_code('cmp', Registers.eax, 0, comment='compare (if)')
+            self._write_code(
+                'test', Registers.eax, Registers.eax, comment='compare (if)')
             if node.else_statement.is_null():
-                self._write_code('je', done_label)
+                self._write_code('jz', done_label)
                 node.then_statement.accept(self)
             else:
-                self._write_code('je', else_label)
+                self._write_code('jz', else_label)
                 node.then_statement.accept(self)
                 self._write_code('jmp', else_label)
                 self._write_label(else_label)

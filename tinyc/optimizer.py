@@ -262,7 +262,7 @@ class UnnecessaryCodeOptimizer(Optimizer):
         if op in ('cdq', 'idiv', 'ret',):
             return True
         elif op in ('add', 'and', 'cmp', 'dec', 'imul', 'inc', 'neg', 'or',
-                'sub', 'xor',):
+                'sub', 'test', 'xor',):
             for arg in code.args:
                 if isinstance(arg, Registers) and arg == register:
                     return True

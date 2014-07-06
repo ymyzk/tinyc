@@ -32,18 +32,20 @@ Tiny C Compiler written in Python 2
   * Call
     * call
     * ret
-  * Jump
+  * Jump / Test
+    * cmp
     * je
     * jmp
+    * jz
     * sete
     * setg
     * setge
     * setl
     * setle
     * setne
+    * test
   * Move
     * cdq
-    * cmp
     * mov
     * movzx
   * Stack
