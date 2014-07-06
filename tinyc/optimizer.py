@@ -51,6 +51,8 @@ class LabelOptimizer(Optimizer):
             if isinstance(line, Label):
                 if line in self.replace_table:
                     # 重複するラベル宣言はコードから外す
+                    self.logger.info(
+                        'Remove: label dupulication: ' + line.label)
                     self.optimized += 1
                     continue
             elif isinstance(line, Code):
@@ -91,6 +93,8 @@ class LabelOptimizer(Optimizer):
 
         self.optimized += len(unused)
 
+        map(lambda l: self.logger.info('Remove: unused label: ' + l.label), unused)
+
         return [i for j, i in enumerate(code) if j not in unused.values()]
 
     def optimize(self, code):
@@ -113,6 +117,8 @@ class GlobalExternOptimizer(Optimizer):
             elif isinstance(line, Extern):
                 # EXTERN が重複しないように追加していく
                 if str(line) in externs:
+                    self.logger.info(
+                        'Remove: extern dupulication: ' + line.label.label)
                     self.optimized += 1
                 else:
                     externs[str(line)] = line
@@ -141,6 +147,7 @@ class JumpOptimizer(Optimizer):
             elif jump:
                 # 無条件ジャンプ直後の実行されないコードをスキップ
                 self.optimized += 1
+                self.logger.info('Remove: instruction after jmp')
                 continue
             elif isinstance(line, Code):
                 if line.op == 'jmp':
@@ -160,7 +167,7 @@ class JumpOptimizer(Optimizer):
                     # 無条件ジャンプ命令直後のラベルであれば, ジャンプ命令を削除対象に追加
                     self.optimized += 1
                     delete_lines += [jump_line]
-                    self.logger.debug('Remove: instruction after jmp')
+                    self.logger.info('Remove: unnecessary jmp')
                 jump = None
             elif isinstance(line, Code):
                 if line.op == 'jmp':
@@ -185,13 +192,13 @@ class UnnecessaryCodeOptimizer(Optimizer):
             if not isinstance(code.args[1], (int,)):
                 return False
             elif code.op == 'add' and code.args[1] == 0:
-                self.logger.debug('Remove: add R, 0')
+                self.logger.info('Remove: add R, 0')
                 return True
             elif code.op == 'sub' and code.args[1] == 0:
-                self.logger.debug('Remove: sub R, 0')
+                self.logger.info('Remove: sub R, 0')
                 return True
             elif code.op == 'imul' and code.args[1] == 1:
-                self.logger.debug('Remove: imul R, 1')
+                self.logger.info('Remove: imul R, 1')
                 return True
         return False
 
@@ -233,7 +240,7 @@ class UnnecessaryCodeOptimizer(Optimizer):
                         self.optimized += 1
                         delete_lines += [store_line, i]
                         store = None
-                        self.logger.debug(
+                        self.logger.info(
                             'Remove: mov (load) after mov (store)')
                     else:
                         store = None
@@ -283,7 +290,7 @@ class UnnecessaryCodeOptimizer(Optimizer):
                         self.optimized += 1
                         delete_lines.append(start)
                         start = -1
-                        self.logger.debug('Remove: unused (mov)')
+                        self.logger.info('Remove: unused mov (store)')
                     start = i
 
         return [i for j, i in enumerate(code) if j not in delete_lines]
@@ -309,7 +316,7 @@ class ReplaceCodeOptimizer(Optimizer):
                     code[i].args[1] = code[i].args[0]
                     code[i].comment += ' (Optimized mov -> xor)'
                     self.optimized += 1
-                    self.logger.debug('Replace : mov R, 0 -> xor R, R')
+                    self.logger.info('Replace: mov R, 0 -> xor R, R')
                 elif (line.op == 'imul'
                         and isinstance(line.args[1], (int, str,))
                         and int(line.args[1]) == 0):
@@ -318,21 +325,21 @@ class ReplaceCodeOptimizer(Optimizer):
                     code[i].args[1] = 0
                     code[i].comment += ' (Optimized imul -> mov)'
                     self.optimized += 1
-                    self.logger.debug('Replace : imul R, 0 -> mov R, 0')
+                    self.logger.info('Replace: imul R, 0 -> mov R, 0')
                 elif line.op == 'inc':
                     # inc -> add
                     code[i].op = 'add'
                     code[i].args.append(1)
                     code[i].comment += ' (Optimized inc -> add)'
                     self.optimized += 1
-                    self.logger.debug('Replace : inc R -> add R, 1')
+                    self.logger.info('Replace: inc R -> add R, 1')
                 elif line.op == 'dec':
                     # dec -> sub
                     code[i].op = 'sub'
                     code[i].args.append(1)
                     code[i].comment += ' (Optimized dec -> sub)'
                     self.optimized += 1
-                    self.logger.debug('Replace : dec R -> sub R, 1')
+                    self.logger.info('Replace: dec R -> sub R, 1')
         return code
 
 
@@ -383,9 +390,12 @@ class StackPointerOptimzier(Optimizer):
                         offset = function[1] + memory.offset - 4
                         code[function[0] + i].args[j].offset = offset
 
+                        self.logger.info('Replace: [ebp+n] -> [esp+n]')
+
         delete_lines = []
         for function in functions:
             self.optimized += 1
+            self.logger.info('Remove: unnecessary calling conventions')
 
             # 関数の先頭と末尾の不要になった部分を削除
             delete_lines += [function[0], function[0] + 1, function[2] - 1]
