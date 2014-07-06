@@ -251,9 +251,18 @@ class UnnecessaryCodeOptimizer(Optimizer):
 
     def _is_register_read(self, code, register=Registers.eax):
         op = code.op.replace(' dword', '')
-        if op in ('ret', 'cdq', 'idiv',):
+
+        # eax の場合の例外
+        if register == Registers.eax:
+            if op == 'movzx':
+                if (isinstance(code.args[1], Registers)
+                        and code.args[1] == Registers.al):
+                    return True
+
+        if op in ('cdq', 'idiv', 'ret',):
             return True
-        elif op in ('add', 'sub', 'imul', 'xor', 'cmp', 'push',):
+        elif op in ('add', 'and', 'cmp', 'dec', 'imul', 'inc', 'neg', 'or',
+                'sub', 'xor',):
             for arg in code.args:
                 if isinstance(arg, Registers) and arg == register:
                     return True
@@ -261,16 +270,27 @@ class UnnecessaryCodeOptimizer(Optimizer):
             if (isinstance(code.args[1], Registers)
                     and code.args[1] == register):
                 return True
+
         return False
 
     def _is_register_write(self, code, register=Registers.eax):
         op = code.op.replace(' dword', '')
-        if op in ('idiv',):
-            return True
-        elif op in ('mov', 'movzx', 'add', 'sub', 'imul', 'xor',):
+
+        if register == Registers.eax:
+            # cdq, idiv は eax に結果を書き込む
+            if op in ('cdq', 'idiv',):
+                return True
+            elif op in ('sete', 'setg', 'setge', 'setl', 'setle', 'setne',):
+                if (isinstance(code.args[0], Registers)
+                        and code.args[0] == Registers.al):
+                    return True
+
+        if op in ('add', 'and', 'call', 'dec', 'imul', 'inc', 'neg', 'mov',
+                'movzx', 'or', 'pop', 'sub', 'xor',):
             if (isinstance(code.args[0], Registers)
                     and code.args[0] == register):
                 return True
+
         return False
 
     def _optimize_unused_code(self, code):

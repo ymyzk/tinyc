@@ -1,6 +1,5 @@
 tinyc
 =====
-
 Tiny C Compiler written in Python 2
 
 文法
@@ -9,6 +8,47 @@ Tiny C Compiler written in Python 2
 * コメント /\* Comment \*/
 * 加算代入演算子 (+=) / 減算代入演算子 (-=)
 * 前置増分演算子 (++) / 前置減分演算子 (--)
+
+コード生成
+----------
+利用する命令
+
+* NASM
+  * COMMON
+  * EXTERN
+  * GLOBAL
+* x86 (IA-32)
+  * 演算子
+    * add
+    * and
+    * dec
+    * idiv
+    * imul
+    * inc
+    * neg
+    * or
+    * sub
+    * xor
+  * Call
+    * call
+    * ret
+  * Jump
+    * je
+    * jmp
+    * sete
+    * setg
+    * setge
+    * setl
+    * setle
+    * setne
+  * Move
+    * cdq
+    * cmp
+    * mov
+    * movzx
+  * Stack
+    * pop
+    * push
 
 最適化
 ------
