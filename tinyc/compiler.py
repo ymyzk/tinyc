@@ -68,6 +68,11 @@ class Compiler(object):
         optimize = self.kwargs['optimization'] > 0
         result = {}
 
+        self.logger.info('Compilation options')
+        self.logger.info('* Format: ' + self.kwargs['format'])
+        self.logger.info(
+            '* Optimization level: ' + str(self.kwargs['optimization']))
+
         # 字句解析/構文解析
         self.logger.info('Compilation process (Lexical/Syntax analysis)')
         ast = self.parser.parse(code, optimize=optimize)
