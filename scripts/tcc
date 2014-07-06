@@ -40,14 +40,9 @@ def main(args):
         'ast': args.ast,
         'debug': args.debug,
         'format': args.f,
-        'O': 1,
+        'optimization': args.O,
         'verbose': args.verbose
     }
-
-    if args.O0:
-        kwargs['O'] = 0
-    elif args.O1:
-        kwargs['O'] = 1
 
     compiler = Compiler(**kwargs)
     result = compiler.compile(data)
@@ -77,10 +72,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TinyC compiler')
-    parser.add_argument('-O0', action='store_true', default=False,
-                        help='Disable optimization')
-    parser.add_argument('-O1', action='store_true', default=False,
-                        help='Normal optimization')
+    parser.add_argument('-O', choices=range(2), default=1, type=int,
+                        help='Optimization level')
     parser.add_argument('-d', '--debug', action='store_true', default=False,
                         help='Debug mode')
     parser.add_argument('-f', choices=['elf', 'macho'], type=str,

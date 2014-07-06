@@ -65,7 +65,7 @@ class Compiler(object):
 
     def compile(self, code):
         fm = self.kwargs['format']
-        optimize = self.kwargs['O'] > 0
+        optimize = self.kwargs['optimization'] > 0
         result = {}
 
         # 字句解析/構文解析
