@@ -35,7 +35,7 @@ class LabelOptimizer(Optimizer):
             if isinstance(line, Label):
                 if label is None:
                     label = line
-                elif line.label[0] == '_':
+                elif line.glob:
                     # GLOBAL に用いるラベルは置換しない
                     continue
                 else:
@@ -74,7 +74,7 @@ class LabelOptimizer(Optimizer):
         # 利用されていないラベルを見つける
         for i, line in enumerate(code):
             if isinstance(line, Label):
-                if line not in used and line.label[0] != '_':
+                if line not in used and not line.glob:
                     # 現時点で引数に利用されていないラベルであれば未使用に追加
                     # ただしグローバルで利用するものは削除しない
                     unused[line] = i

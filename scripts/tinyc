@@ -39,6 +39,7 @@ def main(args):
     kwargs = {
         'ast': args.ast,
         'debug': args.debug,
+        'format': args.f,
         'O': 1,
         'verbose': args.verbose
     }
@@ -82,6 +83,8 @@ if __name__ == '__main__':
                         help='Normal optimization')
     parser.add_argument('-d', '--debug', action='store_true', default=False,
                         help='Debug mode')
+    parser.add_argument('-f', choices=['elf', 'macho'], type=str,
+                        default='macho', help='Select an output format')
     parser.add_argument('-v', '--verbose', action='store_true', default=False,
                         help='Verbose mode')
     parser.add_argument('--ast', action='store_true', default=False,

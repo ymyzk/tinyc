@@ -112,7 +112,8 @@ class Global(object):
 
 
 class Label(object):
-    def __init__(self, label, **kwargs):
+    def __init__(self, label, glob=False, **kwargs):
+        self.glob = glob
         self.label = label
 
     def __eq__(self, other):

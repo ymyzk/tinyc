@@ -64,6 +64,7 @@ class Compiler(object):
         return "\n".join(result) + '\n'
 
     def compile(self, code):
+        fm = self.kwargs['format']
         optimize = self.kwargs['O'] > 0
         result = {}
 
@@ -86,7 +87,7 @@ class Compiler(object):
             # コード生成
             self.logger.info('Compilation process (Code generation)')
             generator = Generator()
-            ast = generator.analyze(ast, optimize=optimize)
+            ast = generator.analyze(ast, format=fm, optimize=optimize)
             code = generator.code
             self.optimized = generator.optimized
 

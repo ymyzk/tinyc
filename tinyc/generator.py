@@ -62,6 +62,13 @@ class Generator(Analyzer):
     def _write_comment(self, comment):
         self._write(Comment(comment))
 
+    def _new_global_label(self, name):
+        if self.format == 'elf':
+            name = name
+        else:
+            name = '_' + name
+        return Label(name, glob=True)
+
     def _new_label(self, prefix='label'):
         self.nlabel += 1
         return Label("{0}_{1}".format(prefix, self.nlabel))
@@ -75,7 +82,8 @@ class Generator(Analyzer):
         self.last_alloc += 4
         return self.last_alloc
 
-    def analyze(self, ast, optimize=True):
+    def analyze(self, ast, format='macho', optimize=True):
+        self.format = format
         self.optimize = optimize
         self.optimized = 0
         self.last_alloc = 0
@@ -89,7 +97,7 @@ class Generator(Analyzer):
         for external_declaration in node.nodes:
             if isinstance(external_declaration, token.Declaration):
                 for declarator in external_declaration.declarators.nodes:
-                    label = Label('_' + declarator.identifier.name)
+                    label = self._new_global_label(declarator.identifier.name)
                     declarator.identifier.label = label
                     self._write(Global(label))
                     self._write(Common(label), 4)
@@ -101,7 +109,7 @@ class Generator(Analyzer):
                 external_declaration.accept(self)
 
     def a_FunctionDefinition(self, node):
-        label = Label('_' + node.declarator.identifier.name)
+        label = self._new_global_label(node.declarator.identifier.name)
         self.return_label = Label(
             "return_{0}".format(node.declarator.identifier.name))
         self._write(Global(label))
@@ -379,7 +387,7 @@ class Generator(Analyzer):
         self._write_label(done_label)
 
     def a_FunctionExpression(self, node):
-        label = Label('_' + node.function.name)
+        label = self._new_global_label(node.function.name)
         if node.function.kind == Kinds.undefined_function:
             self._write(Extern(label))
         node.argument_list.accept(self)
