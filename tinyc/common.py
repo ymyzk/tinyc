@@ -10,9 +10,9 @@ import enum
 
 KEYWORDS = {
     # Keywords
-    'int':      'INT',
-    'if':       'IF',
     'else':     'ELSE',
+    'if':       'IF',
+    'int':      'INT',
     'return':   'RETURN',
     'while':    'WHILE',
 }
