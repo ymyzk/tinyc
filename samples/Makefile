@@ -4,11 +4,12 @@ NASM = nasm
 CC = clang
 LD = clang
 # GCC
-# CC = gcc
-# LD = gcc
+CC = gcc
+LD = gcc
 
-CFLAGS = -m32 -c -std=c11
-TCCFLAGS = --ast -O1 --debug --verbose
+# OS X
+CFLAGS = -m32 -c -std=c99
+TCCFLAGS = --ast -O1 -f macho --debug --verbose
 LDFLAGS = -m32 -Wl,-no_pie
 NASMFLAGS = -f macho
 
