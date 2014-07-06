@@ -234,7 +234,7 @@ class Generator(Analyzer):
                 comment='calc (R)')
 
     def _a_BinaryOperator_arithmetic_rsl(self, node):
-        """Right-Save-Left 型"""
+        """Right-Save-Left 型"""
         # Right
         node.right.accept(self)
         temp = self._allocate()

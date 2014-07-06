@@ -8,7 +8,6 @@ import os
 import sys
 
 from tinyc.compiler import Compiler
-from tinyc.logger import get_logger
 
 
 def get_logger(args):
