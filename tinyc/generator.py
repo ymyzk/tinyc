@@ -70,8 +70,12 @@ class Generator(Analyzer):
         return Label(name, glob=True)
 
     def _new_label(self, prefix='label'):
+        if self.format == 'elf':
+            name = "_L{0}_{1}".format(self.nlabel, prefix)
+        else:
+            name = "L{0}_{1}".format(self.nlabel, prefix)
         self.nlabel += 1
-        return Label("{0}_{1}".format(prefix, self.nlabel))
+        return Label(name)
 
     def _allocate(self):
         self.last_alloc -= 4
@@ -110,7 +114,7 @@ class Generator(Analyzer):
 
     def a_FunctionDefinition(self, node):
         label = self._new_global_label(node.declarator.identifier.name)
-        self.return_label = Label(
+        self.return_label = self._new_label(
             "return_{0}".format(node.declarator.identifier.name))
         self._write(Global(label))
         self._write('')
