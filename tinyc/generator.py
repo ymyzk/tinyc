@@ -385,8 +385,9 @@ class Generator(Analyzer):
         done_label = self._new_label('while_done')
         self._write_label(test_label)
         node.expr.accept(self)
-        self._write_code('cmp', Registers.eax, 0, comment='compare (while)')
-        self._write_code('je', done_label)
+        self._write_code(
+            'test', Registers.eax, Registers.eax, comment='compare (while)')
+        self._write_code('jz', done_label)
         node.statement.accept(self)
         self._write_code('jmp', test_label)
         self._write_label(done_label)
