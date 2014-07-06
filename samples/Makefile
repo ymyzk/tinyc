@@ -1,4 +1,4 @@
-TCC = tinyc
+TCC = tcc
 NASM = nasm
 # clang
 CC = clang

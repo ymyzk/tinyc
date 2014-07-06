@@ -13,7 +13,7 @@ setup(name='tinyc',
       author_email='miyazaki.dev@gmail.com',
       url='https://github.com/litesystems/tinyc',
       packages=['tinyc'],
-      scripts=['scripts/tinyc'],
+      scripts=['scripts/tcc'],
       test_suite='tests',
       install_requires=[
           'ply==3.4',
