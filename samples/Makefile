@@ -9,20 +9,20 @@ LD = clang
 
 # OS X
 CFLAGS = -m32 -c -std=c99
-TCCFLAGS = --ast -O 1 -f macho --debug --verbose
+TCCFLAGS = --ast -O 1 -f macho --verbose
 LDFLAGS = -m32 -Wl,-no_pie
 NASMFLAGS = -f macho
 # Linux
 #CFLAGS = -m32 -c -std=c99
-#TCCFLAGS = --ast -O 1 -f elf --debug --verbose
+#TCCFLAGS = --ast -O 1 -f elf --verbose
 #LDFLAGS = -m32
 #NASMFLAGS = -f elf
 
 PROGRAMS = ack arith assign comment compare fact fib gcd global incdec label logical scope while
 OBJS = utility.o
 
-.PRECIOUS: %.nasm
-.SUFFIXES: .c .nasm .o .tc
+.PRECIOUS: %.asm
+.SUFFIXES: .c .asm .o .tc
 
 all: $(PROGRAMS)
 
@@ -31,7 +31,7 @@ test: $(PROGRAMS)
 	@LIST="$(PROGRAMS)"; \
 		for x in $$LIST; do \
 			echo "$$x"; \
-			./$$x; \
+			./$$x | tee $$x.out; \
 		done
 
 ack: $(OBJS) ack.o
@@ -79,16 +79,18 @@ while: $(OBJS) while.o
 .c.o:
 	$(CC) $(CFLAGS) -o $@ $<
 
-.tc.nasm:
+.tc.asm:
 	$(TCC) $(TCCFLAGS) -o $@ $< 2> $(basename $@).log
 
-.nasm.o:
+.asm.o:
 	$(NASM) $(NASMFLAGS) $<
 
 .PHONY: clean
 clean:
+	rm -rf ./*.asm
 	rm -rf ./*.ast
 	rm -rf ./*.log
 	rm -rf ./*.nasm
 	rm -rf ./*.o
+	rm -rf ./*.out
 	rm -rf $(PROGRAMS)
