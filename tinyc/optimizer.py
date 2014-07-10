@@ -170,7 +170,7 @@ class JumpOptimizer(Optimizer):
                     self.logger.info('Remove: unnecessary ' + jump.op)
                 jump = None
             elif isinstance(line, Code):
-                if line.op in ('jmp',):
+                if line.op in ('je', 'jmp', 'jz',):
                     # 無条件ジャンプ命令を検出
                     jump = line
                     jump_line = i
