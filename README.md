@@ -76,8 +76,8 @@ Tiny C Compiler written in Python 2
 * 効率の良い命令への書き換え
  * imul *R* 0 -> mov *R* 0
  * mov *R* 0 -> xor *R* *R*
- * inc *R* -> add *R* 1 (参考文献5の3.5.1.1)
- * dec *R* -> sub *R* 1 (参考文献5の3.5.1.1)
+ * inc *R* -> add *R* 1 (参考文献6の3.5.1.1)
+ * dec *R* -> sub *R* 1 (参考文献6の3.5.1.1)
 * ebp 相対アクセスを esp 相対アクセスに書き換え
 
 実行方法
@@ -100,9 +100,10 @@ $ tcc -h
 参考文献
 --------
 1. [計算機科学実験及演習 3（ソフトウェア）実験資料](http://www.fos.kuis.kyoto-u.ac.jp/~umatani/le3b/siryo.pdf)
-2. [IA-32 インテル® アーキテクチャー・ソフトウェア・デベロッパーズ・マニュアル、上巻: 基本アーキテクチャー](http://www.intel.co.jp/content/dam/www/public/ijkk/jp/ja/documents/developer/IA32_Arh_Dev_Man_Vol1_Online_i.pdf)
-3. [IA-32 インテル® アーキテクチャー・ソフトウェア・デベロッパーズ・マニュアル、中巻 A: 命令セット・リファレンス A-M](http://www.intel.co.jp/content/dam/www/public/ijkk/jp/ja/documents/developer/IA32_Arh_Dev_Man_Vol2A_i.pdf)
-4. [IA-32 インテル® アーキテクチャー・ソフトウェア・デベロッパーズ・マニュアル、中巻 B: 命令セット・リファレンス N-Z](http://www.intel.co.jp/content/dam/www/public/ijkk/jp/ja/documents/developer/IA32_Arh_Dev_Man_Vol2B_i.pdf)
-5. [インテル® 64 アーキテクチャーおよび IA-32 アーキテクチャー最適化リファレンス・マニュアル](http://www.intel.co.jp/content/dam/www/public/ijkk/jp/ja/documents/developer/248966-024JA.pdf)
-6. [PLY (Python Lex-Yacc)](http://www.dabeaz.com/ply/)
-7. [Atul's Mini-C Compiler](http://people.cs.uchicago.edu/~varmaa/mini_c/)
+2. [湯浅太一, コンパイラ (情報系教科書シリーズ), 昭晃堂, 2001](http://www.amazon.co.jp/%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9-%E6%83%85%E5%A0%B1%E7%B3%BB%E6%95%99%E7%A7%91%E6%9B%B8%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA-%E6%B9%AF%E6%B5%85-%E5%A4%AA%E4%B8%80/dp/4785620501)
+3. [IA-32 インテル® アーキテクチャー・ソフトウェア・デベロッパーズ・マニュアル、上巻: 基本アーキテクチャー](http://www.intel.co.jp/content/dam/www/public/ijkk/jp/ja/documents/developer/IA32_Arh_Dev_Man_Vol1_Online_i.pdf)
+4. [IA-32 インテル® アーキテクチャー・ソフトウェア・デベロッパーズ・マニュアル、中巻 A: 命令セット・リファレンス A-M](http://www.intel.co.jp/content/dam/www/public/ijkk/jp/ja/documents/developer/IA32_Arh_Dev_Man_Vol2A_i.pdf)
+5. [IA-32 インテル® アーキテクチャー・ソフトウェア・デベロッパーズ・マニュアル、中巻 B: 命令セット・リファレンス N-Z](http://www.intel.co.jp/content/dam/www/public/ijkk/jp/ja/documents/developer/IA32_Arh_Dev_Man_Vol2B_i.pdf)
+6. [インテル® 64 アーキテクチャーおよび IA-32 アーキテクチャー最適化リファレンス・マニュアル](http://www.intel.co.jp/content/dam/www/public/ijkk/jp/ja/documents/developer/248966-024JA.pdf)
+7. [PLY (Python Lex-Yacc)](http://www.dabeaz.com/ply/)
+8. [Atul's Mini-C Compiler](http://people.cs.uchicago.edu/~varmaa/mini_c/)
