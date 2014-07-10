@@ -84,7 +84,7 @@ Tiny C Compiler written in Python 2
 --------
 ```
 $ pip install git+https://github.com/litesystems/tinyc.git
-$ tinyc -h
+$ tcc -h
 ```
 
 テスト環境
