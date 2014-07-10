@@ -18,7 +18,7 @@ NASMFLAGS = -f macho
 #LDFLAGS = -m32
 #NASMFLAGS = -f elf
 
-PROGRAMS = ack arith compare fact fib gcd global label logical scope while
+PROGRAMS = ack arith assign comment compare fact fib gcd global incdec label logical scope while
 OBJS = utility.o
 
 .PRECIOUS: %.nasm
@@ -40,6 +40,12 @@ ack: $(OBJS) ack.o
 arith: $(OBJS) arith.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
+assign: $(OBJS) assign.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+comment: $(OBJS) comment.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
 compare: $(OBJS) compare.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
@@ -53,6 +59,9 @@ gcd: $(OBJS) gcd.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
 global: $(OBJS) global.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+incdec: $(OBJS) incdec.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
 label: $(OBJS) label.o

@@ -1,0 +1,25 @@
+int prime(int n) {
+    /*
+     * Return if n is a prime number
+     * if n is a prime number -> return 1
+     * else -> return 0
+     */
+    int i;
+    if (n <= 2) return 0;
+    i = 1;
+    /* Loop 2 -> n - 1 */
+    while (++i < n) {
+        if (n / i * i == n) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int main() {
+    test(prime(2), 0);
+    test(prime(3), 1);
+    test(prime(4), 0);
+    test(prime(7), 1);
+    return 0;
+}

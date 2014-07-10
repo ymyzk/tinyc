@@ -1,11 +1,14 @@
 ack
 arith
+assign
+comment
 compare
 err
 fact
 fib
 gcd
 global
+incdec
 label
 logical
 scope

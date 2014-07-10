@@ -1,0 +1,21 @@
+int inc(int x, int y) {
+    ++x;
+    ++y;
+    ++x;
+    ++y;
+    return ++x + ++y;
+}
+
+int dec(int x, int y) {
+    --x;
+    --y;
+    --x;
+    --y;
+    return --x + --y;
+}
+
+int main() {
+    test(inc(3, 4), 13);
+    test(dec(3, 4), 1);
+    return 0;
+}
