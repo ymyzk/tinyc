@@ -20,7 +20,7 @@ class Optimizer(object):
 
 
 class LabelOptimizer(Optimizer):
-    """不要なラベルと削除することによる最適化"""
+    """不要なラベルを削除することによる最適化"""
 
     def __init__(self):
         super(LabelOptimizer, self).__init__()
@@ -157,7 +157,7 @@ class JumpOptimizer(Optimizer):
         return new_code
 
     def _optimize_jump_2(self, code):
-        """直後のラベルへの無条件ジャンプ命令を削除"""
+        """直後のラベルへのジャンプ命令を削除"""
         jump = None
         jump_line = -1
         delete_lines = []
@@ -167,10 +167,10 @@ class JumpOptimizer(Optimizer):
                     # 無条件ジャンプ命令直後のラベルであれば, ジャンプ命令を削除対象に追加
                     self.optimized += 1
                     delete_lines += [jump_line]
-                    self.logger.info('Remove: unnecessary jmp')
+                    self.logger.info('Remove: unnecessary ' + jump.op)
                 jump = None
             elif isinstance(line, Code):
-                if line.op == 'jmp':
+                if line.op in ('jmp',):
                     # 無条件ジャンプ命令を検出
                     jump = line
                     jump_line = i
