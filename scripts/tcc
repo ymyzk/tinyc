@@ -50,7 +50,7 @@ def main(args):
     if 'asm' in result:
         # コード出力処理
         if args.o is None:
-            out_filename = os.path.splitext(args.input.name)[0] + '.nasm'
+            out_filename = os.path.splitext(args.input.name)[0] + '.asm'
             args.o = open(out_filename, 'w')
 
         args.o.write(result['asm'])
