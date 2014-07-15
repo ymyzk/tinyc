@@ -40,6 +40,7 @@ def main(args):
         'ast': args.ast,
         'debug': args.debug,
         'format': args.f,
+        'mode': args.m,
         'optimization': args.O,
         'verbose': args.verbose
     }
@@ -78,6 +79,8 @@ if __name__ == '__main__':
                         help='Debug mode')
     parser.add_argument('-f', choices=['elf', 'macho'], type=str,
                         default='macho', help='Select an output format')
+    parser.add_argument('-m', choices=['llvm', 'nasm'], type=str,
+                        default='nasm')
     parser.add_argument('-v', '--verbose', action='store_true', default=False,
                         help='Verbose mode')
     parser.add_argument('--ast', action='store_true', default=False,

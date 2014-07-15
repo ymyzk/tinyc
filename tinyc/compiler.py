@@ -7,6 +7,7 @@ import logging
 from tinyc import analyzer, optimizer
 from tinyc.code import Label
 from tinyc.generator import Generator
+from tinyc.llvm import LLVMGenerator
 from tinyc.parser import Parser
 
 
@@ -65,6 +66,7 @@ class Compiler(object):
 
     def compile(self, code):
         fm = self.kwargs['format']
+        mode = self.kwargs['mode']
         optimize = self.kwargs['optimization'] > 0
         result = {}
 
@@ -91,16 +93,22 @@ class Compiler(object):
         if self.errors == 0:
             # コード生成
             self.logger.info('Compilation process (Code generation)')
-            generator = Generator()
-            ast = generator.analyze(ast, format=fm, optimize=optimize)
-            code = generator.code
-            self.optimized = generator.optimized
 
-            # 最適化
-            if optimize:
-                code = self._optimize(code)
+            if mode == 'llvm':
+                generator = LLVMGenerator()
+                ir = generator.analyze(ast)
+                result['asm'] = ir
+            elif mode == 'nasm':
+                generator = Generator()
+                ast = generator.analyze(ast, format=fm, optimize=optimize)
+                code = generator.code
+                self.optimized = generator.optimized
 
-            result['asm'] = self._format(code)
+                # 最適化
+                if optimize:
+                    code = self._optimize(code)
+
+                result['asm'] = self._format(code)
 
         # 抽象構文木
         if self.kwargs['ast']:

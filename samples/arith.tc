@@ -29,4 +29,5 @@ int main() {
     test(rsl1(10), 4);
     test(rsl2(), -4);
     test(arth(2, 4), 9);
+    return 0;
 }
