@@ -53,13 +53,7 @@ class LLVMGenerator(Analyzer):
         self.optimize = optimize
         self.module = Module.new('module')
         ast.accept(self)
-
-        # LLVM のモジュールを文字列に変換
-        ir = str(self.module).split('\n')
-        # common を llvmpy が出力してくれないので, external で出力したものを置換する
-        ir = map(lambda i: i.replace(' external global i32', ' common global i32 0'), ir)
-        ir = '\n'.join(ir)
-        return ir
+        return self.module
 
     def a_ExternalDeclarationList(self, node):
         u"""先にグローバル変数をまとめて処理し, 次に関数定義を処理する"""
@@ -209,6 +203,10 @@ class LLVMGenerator(Analyzer):
         node.argument_list.accept(self)
         node.ir = self.builder.call(
             node.function.ir, map(lambda a: a.ir, node.argument_list.nodes))
+
+    def a_Negative(self, node):
+        node.expr.accept(self)
+        node.ir = self.builder.neg(node.expr.ir)
 
     def a_Increment(self, node):
         node.expr.accept(self)

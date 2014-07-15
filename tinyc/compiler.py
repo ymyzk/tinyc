@@ -1,8 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 import logging
+
+
+try:
+    from llvm import passes
+except:
+    pass
 
 from tinyc import analyzer, generator, optimizer
 from tinyc.code import Label
@@ -28,7 +34,29 @@ class Compiler(object):
         self.warnings += analyzer.warnings
         return ast
 
-    def _optimize(self, code):
+    def _optimize_llvm(self, module):
+        manager = passes.PassManager.new()
+        manager.add(str('adce'))
+        manager.add(str('dce'))
+        manager.add(str('die'))
+        manager.add(str('dse'))
+        manager.add(str('tailcallelim'))
+        manager.add(str('block-placement'))
+        manager.add(str('instcombine'))
+        manager.add(str('loop-unroll'))
+        manager.add(str('reassociate'))
+        manager.add(str('simplifycfg'))
+        manager.run(module)
+
+        manager = passes.FunctionPassManager.new(module)
+        manager.add(str('gvn'))
+        manager.add(str('reassociate'))
+        manager.add(str('instcombine'))
+        for function in module.functions:
+            manager.run(function)
+        return module
+
+    def _optimize_nasm(self, code):
         """最適化処理"""
         self.logger.info('Compilation process (Peephole optimizations)')
         for i in range(1, 6):
@@ -50,6 +78,15 @@ class Compiler(object):
         code = optimizer.optimize(code)
         self.optimized += optimizer.optimized
         return code
+
+    def _format_llvm(self, module):
+        self.logger.info('Compilation process (Code formatting)')
+        # LLVM のモジュールを文字列に変換
+        ir = str(module).split('\n')
+        # common を llvmpy が出力してくれないので, external で出力したものを置換する
+        ir = map(lambda i: i.replace(' external global i32', ' common global i32 0'), ir)
+        ir = '\n'.join(ir)
+        return ir
 
     def _format(self, code):
         """コードを文字列にフォーマットする処理"""
@@ -94,8 +131,12 @@ class Compiler(object):
 
             if mode == 'llvm':
                 gen = generator.LLVMGenerator()
-                ir = gen.analyze(ast, optimize=optimize)
-                result['asm'] = ir
+                module = gen.analyze(ast, optimize=optimize)
+
+                if optimize:
+                    module = self._optimize_llvm(module)
+
+                result['asm'] = self._format_llvm(module)
             elif mode == 'nasm':
                 gen = generator.NASMx86Generator()
                 ast = gen.analyze(ast, format=fm, optimize=optimize)
@@ -104,7 +145,7 @@ class Compiler(object):
 
                 # 最適化
                 if optimize:
-                    code = self._optimize(code)
+                    code = self._optimize_nasm(code)
 
                 result['asm'] = self._format(code)
 
