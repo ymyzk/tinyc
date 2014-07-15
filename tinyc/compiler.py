@@ -4,10 +4,8 @@
 from __future__ import print_function, unicode_literals
 import logging
 
-from tinyc import analyzer, optimizer
+from tinyc import analyzer, generator, optimizer
 from tinyc.code import Label
-from tinyc.generator import Generator
-from tinyc.llvm import LLVMGenerator
 from tinyc.parser import Parser
 
 
@@ -95,14 +93,14 @@ class Compiler(object):
             self.logger.info('Compilation process (Code generation)')
 
             if mode == 'llvm':
-                generator = LLVMGenerator()
-                ir = generator.analyze(ast)
+                gen = generator.LLVMGenerator()
+                ir = gen.analyze(ast, optimize=optimize)
                 result['asm'] = ir
             elif mode == 'nasm':
-                generator = Generator()
-                ast = generator.analyze(ast, format=fm, optimize=optimize)
-                code = generator.code
-                self.optimized = generator.optimized
+                gen = generator.NASMx86Generator()
+                ast = gen.analyze(ast, format=fm, optimize=optimize)
+                code = gen.code
+                self.optimized = gen.optimized
 
                 # 最適化
                 if optimize:

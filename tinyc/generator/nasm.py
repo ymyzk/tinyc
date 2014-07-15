@@ -11,7 +11,7 @@ from tinyc.code import (
 from tinyc.common import Kinds
 
 
-class Generator(Analyzer):
+class NASMx86Generator(Analyzer):
     """コード生成器"""
     def __init__(self):
         self.code = []

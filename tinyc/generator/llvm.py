@@ -53,6 +53,7 @@ class LLVMGenerator(Analyzer):
         self.optimize = optimize
         self.module = Module.new('module')
         ast.accept(self)
+
         # LLVM のモジュールを文字列に変換
         ir = str(self.module).split('\n')
         # common を llvmpy が出力してくれないので, external で出力したものを置換する
