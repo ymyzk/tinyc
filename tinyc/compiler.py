@@ -36,24 +36,28 @@ class Compiler(object):
 
     def _optimize_llvm(self, module):
         manager = passes.PassManager.new()
+        # manager.add(str('loop-unroll'))
+        manager.run(module)
+
+        manager = passes.FunctionPassManager.new(module)
         manager.add(str('adce'))
         manager.add(str('dce'))
         manager.add(str('die'))
         manager.add(str('dse'))
-        manager.add(str('tailcallelim'))
+        manager.add(str('mem2reg'))
         manager.add(str('block-placement'))
-        manager.add(str('instcombine'))
-        manager.add(str('loop-unroll'))
-        manager.add(str('reassociate'))
-        manager.add(str('simplifycfg'))
-        manager.run(module)
 
-        manager = passes.FunctionPassManager.new(module)
+        # Global Value Numbering
         manager.add(str('gvn'))
+        # Reassociate expressions
         manager.add(str('reassociate'))
+        # Combine redundant instructions
         manager.add(str('instcombine'))
-        for function in module.functions:
-            manager.run(function)
+        # Simplify the CFG
+        manager.add(str('simplifycfg'))
+        for i in range(5):
+            for function in module.functions:
+                manager.run(function)
         return module
 
     def _optimize_nasm(self, code):
