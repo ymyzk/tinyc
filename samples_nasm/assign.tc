@@ -1,0 +1,15 @@
+int assign_plus(int x, int y) {
+    x += y;
+    return x += y;
+}
+
+int assign_minus(int x, int y) {
+    x -= y;
+    return x -= y;
+}
+
+int main() {
+    test(assign_plus(3, 4), 11);
+    test(assign_minus(3, 4), -5);
+    return 0;
+}

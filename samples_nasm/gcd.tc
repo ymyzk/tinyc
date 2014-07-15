@@ -1,0 +1,13 @@
+int gcd(int a, int b) {
+    if (a == b) return a;
+    else if (a > b) return gcd(a - b, b);
+    else return gcd(a, b - a);
+}
+
+int main() {
+    test(gcd(3, 1), 1);
+    test(gcd(3, 6), 3);
+    test(gcd(545, 55), 5);
+    test(gcd(77, 21), 7);
+    return 0;
+}
