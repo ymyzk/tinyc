@@ -34,6 +34,25 @@ test: $(PROGRAMS)
 			./$$x | tee $$x.out; \
 		done
 
+.PHONY: clean
+clean:
+	rm -rf ./*.asm
+	rm -rf ./*.ast
+	rm -rf ./*.log
+	rm -rf ./*.nasm
+	rm -rf ./*.o
+	rm -rf ./*.out
+	rm -rf $(PROGRAMS)
+
+.c.o:
+	$(CC) $(CFLAGS) -o $@ $<
+
+.tc.asm:
+	$(TCC) $(TCCFLAGS) -o $@ $< 2> $(basename $@).log
+
+.asm.o:
+	$(NASM) $(NASMFLAGS) $<
+
 ack: $(OBJS) ack.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
@@ -75,22 +94,3 @@ scope: $(OBJS) scope.o
 
 while: $(OBJS) while.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
-
-.c.o:
-	$(CC) $(CFLAGS) -o $@ $<
-
-.tc.asm:
-	$(TCC) $(TCCFLAGS) -o $@ $< 2> $(basename $@).log
-
-.asm.o:
-	$(NASM) $(NASMFLAGS) $<
-
-.PHONY: clean
-clean:
-	rm -rf ./*.asm
-	rm -rf ./*.ast
-	rm -rf ./*.log
-	rm -rf ./*.nasm
-	rm -rf ./*.o
-	rm -rf ./*.out
-	rm -rf $(PROGRAMS)

@@ -1,0 +1,17 @@
+int x, y;
+
+int f(int x) {
+    y = 3;
+    return x + y;
+}
+
+int g(int y) {
+    return x + y;
+}
+
+int main() {
+    x = 4;
+    test(f(2), 5);
+    test(g(3), 7);
+    return 0;
+}
