@@ -4,7 +4,6 @@ Tiny C Compiler written in Python 2.
 
 Tiny C のコードを入力して, アセンブリ言語のコードを出力する.  
 出力形式は NASM (x86) と LLVM IR (x86, x64, arm...) である.
-Tiny C のコードを入力し, NASM IA-32 のアセンブリのコードを出力する.  
 
 文法
 ----
