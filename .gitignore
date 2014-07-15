@@ -55,6 +55,7 @@ docs/_build/
 venv
 parser.out
 parsetab.py
+*.asm
 *.ast
 *.nasm
 *.o

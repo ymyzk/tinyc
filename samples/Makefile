@@ -8,14 +8,14 @@ LD = clang
 #LD = gcc
 
 # OS X
-CFLAGS = -m32 -c -std=c99
+CFLAGS = -m32 -c -std=c99 -O3
 TCCFLAGS = --ast -O 1 -f macho --verbose
-LDFLAGS = -m32 -Wl,-no_pie
+LDFLAGS = -m32 -Wl,-no_pie -O3
 NASMFLAGS = -f macho
 # Linux
-#CFLAGS = -m32 -c -std=c99
+#CFLAGS = -m32 -c -std=c99 -O3
 #TCCFLAGS = --ast -O 1 -f elf --verbose
-#LDFLAGS = -m32
+#LDFLAGS = -m32 -O3
 #NASMFLAGS = -f elf
 
 PROGRAMS = ack arith assign comment compare fact fib gcd global incdec label logical scope while
