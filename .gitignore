@@ -60,5 +60,6 @@ parsetab.py
 *.ll
 *.nasm
 *.o
+*.out
 *.s
 *.swp

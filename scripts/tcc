@@ -40,7 +40,6 @@ def main(args):
         'ast': args.ast,
         'debug': args.debug,
         'format': args.f,
-        'mode': args.m,
         'optimization': args.O,
         'verbose': args.verbose
     }
@@ -51,7 +50,10 @@ def main(args):
     if 'asm' in result:
         # コード出力処理
         if args.o is None:
-            out_filename = os.path.splitext(args.input.name)[0] + '.asm'
+            if args.f == 'llvm':
+                out_filename = os.path.splitext(args.input.name)[0] + '.ll'
+            else:
+                out_filename = os.path.splitext(args.input.name)[0] + '.asm'
             args.o = open(out_filename, 'w')
 
         args.o.write(result['asm'])
@@ -77,10 +79,8 @@ if __name__ == '__main__':
                         help='Optimization level (default: 1)')
     parser.add_argument('-d', '--debug', action='store_true', default=False,
                         help='Debug mode')
-    parser.add_argument('-f', choices=['elf', 'macho'], type=str,
+    parser.add_argument('-f', choices=['elf', 'macho', 'llvm'], type=str,
                         default='macho', help='Select an output format')
-    parser.add_argument('-m', choices=['llvm', 'nasm'], type=str,
-                        default='nasm')
     parser.add_argument('-v', '--verbose', action='store_true', default=False,
                         help='Verbose mode')
     parser.add_argument('--ast', action='store_true', default=False,

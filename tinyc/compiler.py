@@ -105,7 +105,6 @@ class Compiler(object):
 
     def compile(self, code):
         fm = self.kwargs['format']
-        mode = self.kwargs['mode']
         optimize = self.kwargs['optimization'] > 0
         result = {}
 
@@ -133,7 +132,7 @@ class Compiler(object):
             # コード生成
             self.logger.info('Compilation process (Code generation)')
 
-            if mode == 'llvm':
+            if fm == 'llvm':
                 gen = generator.LLVMGenerator()
                 module = gen.analyze(ast, optimize=optimize)
 
@@ -141,7 +140,7 @@ class Compiler(object):
                     module = self._optimize_llvm(module)
 
                 result['asm'] = self._format_llvm(module)
-            elif mode == 'nasm':
+            else:
                 gen = generator.NASMx86Generator()
                 ast = gen.analyze(ast, format=fm, optimize=optimize)
                 code = gen.code

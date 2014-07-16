@@ -1,10 +1,10 @@
 TCC = tcc
 CC = clang
 LD = clang
-LLC = llc
+LLC = llc-3.3
 
 CFLAGS = -m32 -c -std=c99 -O3
-TCCFLAGS = --ast -O 1 --verbose -m llvm
+TCCFLAGS = --ast -O 1 --verbose -f llvm
 LLCFLAGS = -O3 -march=x86
 # OS X
 #LDFLAGS = -m32 -Wl,-no_pie -O3
