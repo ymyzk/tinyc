@@ -6,6 +6,11 @@
 from __future__ import print_function, unicode_literals
 import logging
 
+try:
+    from llvm import passes
+except:
+    pass
+
 from tinyc.code import (
     Code, Comment, Data, Extern, Global, Label, Memory, Register, Registers)
 
@@ -426,3 +431,31 @@ class StackPointerOptimzier(Optimizer):
                                      comment='Optimized ebp -> esp')
 
         return [i for j, i in enumerate(code) if j not in delete_lines]
+
+
+class LLVMPasses(object):
+    def __init__(self):
+        self.logger = logging.getLogger()
+        self.passes = (
+            ' -targetlibinfo -no-aa -tbaa -basicaa -notti -preverify -domtree'
+            ' -verify -globalopt -ipsccp -deadargelim -instcombine -simplifycfg'
+            ' -basiccg -prune-eh -inline-cost -inline -functionattrs'
+            ' -argpromotion -sroa -domtree -early-cse -simplify-libcalls'
+            ' -lazy-value-info -jump-threading -correlated-propagation'
+            ' -simplifycfg -instcombine -tailcallelim -simplifycfg -reassociate'
+            ' -domtree -loops -loop-simplify -lcssa -loop-rotate -licm -lcssa'
+            ' -loop-unswitch -instcombine -scalar-evolution -loop-simplify'
+            ' -lcssa -indvars -loop-idiom -loop-deletion -loop-unroll -memdep'
+            ' -gvn -memdep -memcpyopt -sccp -instcombine -lazy-value-info'
+            ' -jump-threading -correlated-propagation -domtree -memdep -dse'
+            ' -adce -simplifycfg -instcombine -strip-dead-prototypes -globaldce'
+            ' -constmerge -preverify -domtree -verify').split(' -')
+
+    def optimize(self, module):
+        manager = passes.PassManager.new()
+        for ps in self.passes:
+            if ps.split != '':
+                manager.add(ps)
+        manager.run(module)
+
+        return module
