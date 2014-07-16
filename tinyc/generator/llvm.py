@@ -3,8 +3,11 @@
 
 from __future__ import absolute_import, print_function
 
-from llvm.core import Builder, Constant, Module, Type
-from llvm.core import IPRED_EQ, IPRED_NE, IPRED_SGE, IPRED_SGT, IPRED_SLE, IPRED_SLT
+try:
+    from llvm.core import Builder, Constant, Module, Type
+    from llvm.core import IPRED_EQ, IPRED_NE, IPRED_SGE, IPRED_SGT, IPRED_SLE, IPRED_SLT
+except:
+    pass
 
 from tinyc import token
 from tinyc.analyzer import Analyzer
