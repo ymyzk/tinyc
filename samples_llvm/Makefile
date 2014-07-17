@@ -2,14 +2,16 @@ TCC = tcc
 CC = clang
 LD = clang
 LLC = llc-3.3
+OPT = opt-3.3
 
 CFLAGS = -m32 -c -std=c99 -O3
 TCCFLAGS = --ast -O 1 --verbose -f llvm
 LLCFLAGS = -O3 -march=x86
+OPTFLAGS = -dot-callgraph -dot-cfg -dot-dom -dot-postdom -dot-regions
 # OS X
-#LDFLAGS = -m32 -Wl,-no_pie -O3
+LDFLAGS = -m32 -Wl,-no_pie -O3
 # Linux
-LDFLAGS = -m32 -O3
+#LDFLAGS = -m32 -O3
 
 PROGRAMS = ack arith assign comment compare fact fib gcd global incdec label logical scope while
 OBJS = utility.o
@@ -31,13 +33,24 @@ test: $(PROGRAMS)
 clean:
 	rm -rf ./*.asm
 	rm -rf ./*.ast
+	rm -rf ./*.dot
 	rm -rf ./*.ll
 	rm -rf ./*.log
 	rm -rf ./*.nasm
 	rm -rf ./*.o
 	rm -rf ./*.out
 	rm -rf ./*.s
+	rm -rf dots/*.dot
 	rm -rf $(PROGRAMS)
+
+.PHONY: dots
+dots: $(PROGRAMS)
+	if [ ! -d dots ]; then mkdir dots; fi
+	@LIST="$(PROGRAMS)"; \
+		for x in $$LIST; do \
+			$(OPT) $(OPTFLAGS) "$$x.ll" > /dev/null; \
+			for f in *.dot; do mv "$$f" "dots/$$x.$$f"; done; \
+		done
 
 .c.o:
 	$(CC) $(CFLAGS) -o $@ $<
