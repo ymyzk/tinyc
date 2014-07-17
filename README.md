@@ -3,7 +3,7 @@ tinyc
 Tiny C Compiler written in Python 2.
 
 Tiny C のコードを入力して, アセンブリ言語のコードを出力する.  
-出力形式は NASM (x86) と LLVM IR (x86, x64, arm...) である.
+出力形式は NASM (x86) と LLVM Assembly である.
 
 文法
 ----
@@ -58,14 +58,14 @@ Tiny C のコードを入力して, アセンブリ言語のコードを出力�
     * push
 
 ### LLVM
-llvmpy を用いて, LLVM IR のコードを出力する.
+llvmpy を用いて, LLVM Assembly のコードを作成し, 最適化パスに渡す.
 
 最適化
 ------
 ### 構文解析
 * 定数計算のコンパイル時実行 (算術/論理/比較)
 
-### コード生成
+### コード生成 (NASM)
 * 不要な条件分岐の削除
 
 ### 最適化 (NASM)
@@ -89,7 +89,8 @@ llvmpy を用いて, LLVM IR のコードを出力する.
 * ebp 相対アクセスを esp 相対アクセスに書き換え
 
 ### 最適化 (LLVM)
-* 準備中
+`llvm-as-3.3 < /dev/null | opt-3.3 -disable-output -debug-pass=Arguments -std-compile-opts`
+で出力されるパスと同じものを使用.
 
 実行方法
 --------
@@ -112,10 +113,12 @@ $ pip install llvmpy
 * OS X
   * NASM 2.11.05
   * clang 3.4
+  * llvmpy 0.12.4
 * Debian jessie/sid
   * NASM 2.11
   * clang 3.3
   * GCC 4.9.0
+  * llvmpy 0.12.4
 
 参考文献
 --------
