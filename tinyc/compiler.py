@@ -98,8 +98,9 @@ class Compiler(object):
             ast = self._analyze(analyzer.SymbolAnalyzer(), ast)
             ast = self._analyze(analyzer.SymbolReplaceAnalyzer(), ast)
             ast = self._analyze(analyzer.FunctionAnalyzer(), ast)
-            ast = self._analyze(analyzer.ParameterAnalyzer(), ast)
-            ast = self._analyze(analyzer.RegisterAnalyzer(), ast)
+            if fm != 'llvm':
+                ast = self._analyze(analyzer.ParameterAnalyzer(), ast)
+                ast = self._analyze(analyzer.RegisterAnalyzer(), ast)
 
         if self.errors == 0:
             # コード生成
