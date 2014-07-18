@@ -52,7 +52,8 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
-venv
+samples_llvm/dots/
+venv/
 parser.out
 parsetab.py
 *.asm
