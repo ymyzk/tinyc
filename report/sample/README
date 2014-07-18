@@ -1,0 +1,47 @@
+# 実行環境
+Linux 及び OS X に対応している.
+NASM / LLVM Assembly の 2 モードがあり, NASM は x86 アーキテクチャに.
+LLVM はその環境の LLVM が対応するすべてのアーキテクチャ向けのコードを生成できる.
+
+NASM モードの時は GCC / clang をコンパイラ / リンカとして利用できる.
+LLVM モードの時は clang をコンパイラ / リンカとして利用する.
+LLVM モードを利用するには LLVM 3.3 が必要になる.
+
+## テスト環境
+* OS X
+  * NASM 2.11.05
+  * clang 3.3
+  * llvmpy 0.12.4
+* Debian jessie/sid
+  * NASM 2.11
+  * clang 3.3
+  * GCC 4.9.0
+  * llvmpy 0.12.4
+
+# インストール方法
+ソースコードは src ディレクトリにあるもののほか, GitHub (https://github.com/litesystems/tinyc) で公開している.
+
+1. 事前準備
+  1. Python 2.7 を利用できる環境を整備する.
+  2. 最新の virtualenv をインストールする.
+2. パッケージのインストール
+  1. GitHub からインストールする場合
+     1. $ `pip install git+https://github.com/litesystems/tinyc.git`
+  2. ソースコードからインストールする場合
+     1. setup.py のあるディレクトリに入り `$ pip install -e .`
+  3. LLVM Assembly 出力を利用したい場合
+     1. LLVM 3.3 をインストールしておく
+     2. llvm-config のパスを設定 `$ export LLVM_CONFIG_PATH=/path/to/llvm-config`
+     3. llvmpy をインストール `$ pip install llvmpy`
+3. 実行する
+  1. ヘルプの表示 `$ tcc -h`
+  2. 単純なコンパイル `$ tcc sample.tc`
+
+# テストコードの実行
+テストコード実行のため, `all` と `tcln` に変更を加えた.
+これらのファイルには, OS / 出力形式別のコードが書かれているので,
+必要に応じてコメントアウトを外して利用する.
+
+`$ ./all` を実行すればすべてのコンパイル処理が行われ実行結果が出力される.
+
+また, 生成されたファイルを削除するために `clean` を追加した.

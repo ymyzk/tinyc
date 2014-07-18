@@ -1,0 +1,38 @@
+int l(int x, int y, int z)
+{
+    return x+y+z;
+}
+
+int r(int x)
+{
+    return x + l(1, 2, 3);
+}
+
+int rsl1(int x)
+{
+    return x - l(1, 2, 3);
+}
+
+int rsl2()
+{
+    return l(1, 2, 3) - r(4);
+}
+
+int arth(int x, int y)
+{
+    int i;
+    i = 10;
+
+    x = x - y;
+    i = i - x - 1;
+    return x+i;
+}
+
+int main()
+{
+    chk(l(1, 2, 3), 6);
+    chk(r(10), 16);
+    chk(rsl1(10), 4);
+    chk(rsl2(), -4);
+    chk(arth(2, 4), 9);
+}

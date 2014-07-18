@@ -1,0 +1,24 @@
+int s()
+{
+    int x;
+    x = 1;
+    {
+        int y;
+        y = 2;
+        {
+            int z;
+            z = 3;
+            x = x-y*z;
+        }
+    }
+    {
+        int w;
+        w = 4;
+        return x+w;
+    }
+}
+
+int main()
+{
+    chk(s(), -1);
+}

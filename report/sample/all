@@ -1,0 +1,30 @@
+#!/bin/csh
+foreach f (*.tc)
+    # Linux / NASM / x86
+    #(tcc $f -O 1 --ast -f macho --verbose -o $f:r.asm) >& $f:r.err
+    # OS X / NASM / x86
+    #(tcc $f -O 1 --ast -f macho --verbose -o $f:r.asm) >& $f:r.err
+    # LLVM
+    (tcc $f -O 1 --ast -f llvm --verbose -o $f:r.ll) >& $f:r.err
+    if (-z $f:r.asm) then
+        rm $f:r.asm
+    endif
+    if (-z $f:r.err) then
+        rm $f:r.err
+    endif
+    if (-z $f:r.ll) then
+        rm $f:r.asm
+    endif
+    if (-e $f:r.asm) then
+        ./tcln $f:r
+        if (-e $f:r) then
+            ./$f:r > $f:r.out
+        endif
+    endif
+    if (-e $f:r.ll) then
+        ./tcln $f:r
+        if (-e $f:r) then
+            ./$f:r > $f:r.out
+        endif
+    endif
+end

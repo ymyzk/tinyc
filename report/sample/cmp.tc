@@ -1,0 +1,30 @@
+int cmp1(int a, int b)
+{
+    if (a+1 > b)
+        return 1;
+    else
+        return 0;
+}
+
+int cmp2(int a, int b)
+{
+    if (a >= b+1)
+        return 1;
+    else
+        return 0;
+}
+
+int cmp3(int a, int b)
+{
+    if (a > b+1)
+        return 1;
+    else
+        return 0;
+}
+
+int main()
+{
+    chk(cmp1(2, 3), 0);
+    chk(cmp2(4, 3), 1);
+    chk(cmp3(4, 2), 1);
+}

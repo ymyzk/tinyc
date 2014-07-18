@@ -1,0 +1,17 @@
+int f(int x)
+{
+    return x + 1;
+}
+
+int g()
+{
+    int i;
+    int x,i;
+
+    return f(y) + f(x,i);
+}
+
+int main()
+{
+    chk(g(),0);
+}

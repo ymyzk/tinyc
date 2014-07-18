@@ -1,0 +1,20 @@
+int x, y;
+
+int f(int x)
+{
+    y = 3;
+
+    return x+y;
+}
+
+int g(int y)
+{
+    return x+y;
+}
+
+int main()
+{
+    x = 4;
+    chk(f(2), 5);
+    chk(g(3), 7);
+}
