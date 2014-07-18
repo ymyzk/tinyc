@@ -37,6 +37,11 @@ test: $(PROGRAMS)
 			./$$x | tee $$x.out; \
 		done
 
+.PHONY: count
+count: $(PROGRAMS)
+	wc -l *.ll
+	wc -l *.s
+
 .PHONY: clean
 clean:
 	rm -rf ./*.asm

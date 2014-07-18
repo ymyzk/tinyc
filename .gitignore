@@ -58,6 +58,7 @@ parser.out
 parsetab.py
 *.asm
 *.ast
+*.err
 *.ll
 *.nasm
 *.o
