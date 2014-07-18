@@ -2,8 +2,8 @@
 # Linux / NASM / x86
 #nasm -f elf $1.asm && gcc -O3 -std=c99 -m32 -o $1 $1.o c_fun.c
 # OS X / NASM / x86
-#nasm -f macho $1.asm && clang -O3 -std=c99 -Wl,-no_pie -m32 -o $1 $1.o c_fun.c
+nasm -f macho $1.asm && clang -O3 -std=c99 -Wl,-no_pie -m32 -o $1 $1.o c_fun.c
 # Linux / LLVM
 #llc-3.3 $1.ll && clang -c -O3 -o $1.o $1.s && clang -O3 -std=c99 -o $1 $1.o c_fun.c
 # OS X / LLVM
-llc-3.3 $1.ll && clang -c -O3 -o $1.o $1.s && clang -O3 -std=c99 -Wl,-no_pie -o $1 $1.o c_fun.c
+#llc-3.3 $1.ll && clang -c -O3 -o $1.o $1.s && clang -O3 -std=c99 -Wl,-no_pie -o $1 $1.o c_fun.c
