@@ -21,7 +21,7 @@ LDFLAGS = -Wl,-no_pie -O3
 # Linux (host)
 #LDFLAGS = -O3
 
-PROGRAMS = ack arith assign comment compare fact fib gcd global incdec label logical scope while
+PROGRAMS = ack arith assign comment compare fact fib gcd global incdec label logical scope ss while
 OBJS = utility.o
 
 .PRECIOUS: %.ll %.s
@@ -109,6 +109,9 @@ logical: $(OBJS) logical.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
 scope: $(OBJS) scope.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+ss: $(OBJS) ss.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
 while: $(OBJS) while.o

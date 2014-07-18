@@ -18,7 +18,7 @@ NASMFLAGS = -f macho
 #LDFLAGS = -m32 -O3
 #NASMFLAGS = -f elf
 
-PROGRAMS = ack arith assign comment compare fact fib gcd global incdec label logical scope while
+PROGRAMS = ack arith assign comment compare fact fib gcd global incdec label logical scope ss while
 OBJS = utility.o
 
 .PRECIOUS: %.asm
@@ -90,6 +90,9 @@ logical: $(OBJS) logical.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
 scope: $(OBJS) scope.o
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
+
+ss: $(OBJS) ss.o
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $@.o
 
 while: $(OBJS) while.o
