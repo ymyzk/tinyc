@@ -88,6 +88,22 @@ llvmpy を用いて, LLVM Assembly のコードを作成し, 最適化パスに�
 `llvm-as-3.3 < /dev/null | opt-3.3 -disable-output -debug-pass=Arguments -std-compile-opts`
 で出力されるパスと同じものを使用.
 
+```
+ -targetlibinfo -no-aa -tbaa -basicaa -notti -preverify -domtree
+ -verify -globalopt -ipsccp -deadargelim -instcombine -simplifycfg
+ -basiccg -prune-eh -inline-cost -inline -functionattrs
+ -argpromotion -sroa -domtree -early-cse -simplify-libcalls
+ -lazy-value-info -jump-threading -correlated-propagation
+ -simplifycfg -instcombine -tailcallelim -simplifycfg -reassociate
+ -domtree -loops -loop-simplify -lcssa -loop-rotate -licm -lcssa
+ -loop-unswitch -instcombine -scalar-evolution -loop-simplify
+ -lcssa -indvars -loop-idiom -loop-deletion -loop-unroll -memdep
+ -gvn -memdep -memcpyopt -sccp -instcombine -lazy-value-info
+ -jump-threading -correlated-propagation -domtree -memdep -dse
+ -adce -simplifycfg -instcombine -strip-dead-prototypes -globaldce
+ -constmerge -preverify -domtree -verify
+```
+
 ## 実行方法
 ```
 $ pip install git+https://github.com/litesystems/tinyc.git
