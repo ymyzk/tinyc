@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-chk(int x, int y)
+void chk(int x, int y)
 {
     printf(x == y ? "OK\n" : "NG\n");
 }
@@ -14,7 +14,7 @@ int v(int i)
     return vv[i];
 }
 
-set_v(i, x)
+void set_v(i, x)
 {
     vv[i] = x;
 }

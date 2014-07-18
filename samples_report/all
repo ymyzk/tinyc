@@ -28,3 +28,7 @@ foreach f (*.tc)
         endif
     endif
 end
+foreach f (*.out)
+    echo $f
+    cat $f
+end
