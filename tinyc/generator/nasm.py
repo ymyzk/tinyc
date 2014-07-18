@@ -375,7 +375,7 @@ class NASMx86Generator(Analyzer):
             else:
                 self._write_code('jz', else_label)
                 node.then_statement.accept(self)
-                self._write_code('jmp', else_label)
+                self._write_code('jmp', done_label)
                 self._write_label(else_label)
                 node.else_statement.accept(self)
             self._write_label(done_label)
