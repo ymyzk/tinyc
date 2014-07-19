@@ -159,3 +159,4 @@ NASM 出力のテスト用コード. `Makefile` を環境に応じて適宜修�
 8. [Atul's Mini-C Compiler](http://people.cs.uchicago.edu/~varmaa/mini_c/)
 9. [LLVM 3.4 Documentation](http://llvm.org/docs/)
 10. [llvmpy 0.12.4 documentation](http://llvmpy.org/llvmpy-doc/0.12.4/index.html)
+11. [OS X ABI Function Call Guide](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/LowLevelABI/130-IA-32_Function_Calling_Conventions/IA32.html)
